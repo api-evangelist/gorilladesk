@@ -1,0 +1,98 @@
+aid: gorilladesk
+name: GorillaDesk
+review:
+  question: Does GorillaDesk expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-04'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. GorillaDesk's documented public API is a
+    request/response REST API (the v1 API at https://api.gorilladesk.com/v1),
+    described by a public OpenAPI 3.0.3 specification. There is no server-push
+    transport (WebSocket or SSE) documented on GorillaDesk's own API to model.
+    Event-driven / push behavior for third parties is delivered through Zapier
+    triggers and out-of-the-box integrations, not through a GorillaDesk-native
+    WebSocket surface.
+findings:
+  summary: |
+    GorillaDesk does not publish a documented public WebSocket API. GorillaDesk
+    is field service management software (pest control, lawn care, pool service).
+    It exposes a real, self-serve public REST API - the v1 API at
+    https://api.gorilladesk.com/v1 - documented by a public OpenAPI 3.0.3
+    specification retrievable at https://api.gorilladesk.com/v1/specs and
+    rendered with Redoc at https://api.gorilladesk.com/. Authentication is Token
+    (Bearer); API keys are per-company and generated on the in-app Addons page
+    (https://beta.gorilladesk.com/addons/api). The documented public surface is
+    intentionally narrow: Company, Users, Customers, Customer Notes, and Phone
+    Types. The API is pure request/response REST over HTTPS. No realtime,
+    bidirectional, or streaming WebSocket (ws:// or wss://) endpoint is
+    documented anywhere on GorillaDesk's own API.
+  publicApi: |
+    Yes - a genuine self-serve public REST API. Any paying GorillaDesk account
+    can generate a per-company Bearer API key from the Addons page; there is no
+    separate developer signup, partner gate, or additional API pricing tier. The
+    v1 OpenAPI spec is public and unauthenticated to read.
+  accessModel: |
+    Subscription grants API access. GorillaDesk is priced per route (technician
+    schedule), not per user. Broader automation beyond the documented v1
+    endpoints (invoices, jobs/appointments, work orders, payments) is offered via
+    Zapier connectors and prebuilt integrations (QuickBooks Online, Square,
+    Stripe, Google Calendar/Maps, Mailchimp) rather than via the public v1 REST
+    spec.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.gorilladesk.com/v1
+      documented: true
+      note: Public v1 API described by an OpenAPI 3.0.3 spec at /v1/specs. Bearer token auth.
+    - protocol: Webhook
+      scheme: https
+      documented: partial
+      note: Push to third parties is delivered through Zapier triggers and integrations, not a documented GorillaDesk-native webhook spec.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in GorillaDesk's public API as of the review date.
+  endpointsConfirmedRest:
+    - GET  https://api.gorilladesk.com/v1/company
+    - GET  https://api.gorilladesk.com/v1/users
+    - GET  https://api.gorilladesk.com/v1/users/{userId}
+    - GET  https://api.gorilladesk.com/v1/customers
+    - POST https://api.gorilladesk.com/v1/customers
+    - GET  https://api.gorilladesk.com/v1/customers/{customerId}
+    - PUT  https://api.gorilladesk.com/v1/customers/{customerId}
+    - POST https://api.gorilladesk.com/v1/customers/{customerId}/notes
+    - GET  https://api.gorilladesk.com/v1/phone-types
+  endpointsModeled: none
+  undocumentedSurface: |
+    A v2 API surface exists at apiv2.gdesk.io (referenced by third-party tooling
+    and an MCP server exposing invoice/job/note operations), but its
+    documentation returned HTTP 401 and is not public, so v2 invoice/job
+    endpoints were NOT modeled or fabricated. Only the confirmed public v1
+    OpenAPI endpoints are represented.
+sources:
+  - url: https://api.gorilladesk.com/
+    type: Documentation
+    note: Redoc-rendered API docs; page loads the OpenAPI spec from /v1/specs. Token (Bearer) auth, per-company keys via Addons page.
+  - url: https://api.gorilladesk.com/v1/specs
+    type: OpenAPI
+    note: Public OpenAPI 3.0.3 spec. Confirms base URL, Bearer security scheme, rate-limit headers, and the Company/Users/Customers/Notes/Phone Types paths.
+  - url: https://gorilladesk.com/integrations-library/
+    type: Documentation
+    note: Integrations library - Zapier, QuickBooks Online, Square, Stripe, Google Calendar/Maps, Mailchimp, Yelp, Google My Business.
+  - url: https://beta.gorilladesk.com/addons/api
+    type: SignUp
+    note: In-app Addons page where per-company API keys are generated and deleted.
+  - url: https://intercom.help/gorilladesk/en/articles/431660-plans-pricing
+    type: Plans
+    note: Plans and pricing - per-route model (Basic/Pro/Growth), 14-day free trial.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. GorillaDesk's own public API is
+    request/response REST (v1, OpenAPI 3.0.3). No AsyncAPI document was created
+    because there is no server-push transport on GorillaDesk's own API to model;
+    push/event delivery to third parties happens through Zapier and prebuilt
+    integrations.

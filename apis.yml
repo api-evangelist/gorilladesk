@@ -1,0 +1,155 @@
+aid: gorilladesk
+url: https://raw.githubusercontent.com/api-evangelist/gorilladesk/refs/heads/main/apis.yml
+name: GorillaDesk
+kind: company
+description: GorillaDesk is field service management software for pest control, lawn
+  care, pool service, and other home-service businesses, covering scheduling,
+  routing, invoicing, payments, customer records, and technician management.
+  GorillaDesk exposes a real, self-serve public REST API - the GorillaDesk v1 API
+  at https://api.gorilladesk.com/v1 - documented with a public OpenAPI 3.0.3
+  specification (rendered via Redoc at https://api.gorilladesk.com/). Access uses
+  per-company API keys (Bearer token authentication) generated on the in-app Addons
+  page; there is no separate developer signup or API pricing tier - any paying
+  account can mint a key. The documented public surface is intentionally narrow
+  (Company, Users, Customers, Customer Notes, and Phone Types); broader automation
+  (invoices, jobs, work orders, payments) is offered through Zapier connectors and
+  out-of-the-box integrations (QuickBooks, Square, Stripe, Google) rather than
+  through the public v1 REST spec. A newer, auth-gated v2 API surface
+  (apiv2.gdesk.io) exists but is not publicly documented.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Field Service Management
+- Pest Control
+- Lawn Care
+- Scheduling
+- Invoicing
+- Customers
+- SaaS
+created: '2026-07-04'
+modified: '2026-07-04'
+specificationVersion: '0.19'
+apis:
+- aid: gorilladesk:gorilladesk-customers-api
+  name: GorillaDesk Customers API
+  tags:
+  - Customers
+  - CRM
+  - Field Service
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  properties:
+  - url: https://api.gorilladesk.com/
+    type: Documentation
+  - url: https://api.gorilladesk.com/
+    type: APIReference
+  - url: openapi/gorilladesk-openapi.yml
+    type: OpenAPI
+  - url: collections/gorilladesk.postman_collection.json
+    type: PostmanCollection
+  - url: collections/gorilladesk.opencollection.json
+    type: OpenCollection
+  description: List, create, retrieve, and update customer records - including
+    contacts, phone numbers, and service locations. Endpoints - GET/POST /customers
+    and GET/PUT /customers/{customerId}. This is the core CRM surface of the public
+    v1 API.
+- aid: gorilladesk:gorilladesk-notes-api
+  name: GorillaDesk Customer Notes API
+  tags:
+  - Notes
+  - Customers
+  - Communication
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  properties:
+  - url: https://api.gorilladesk.com/
+    type: APIReference
+  - url: openapi/gorilladesk-openapi.yml
+    type: OpenAPI
+  - url: collections/gorilladesk.postman_collection.json
+    type: PostmanCollection
+  - url: collections/gorilladesk.opencollection.json
+    type: OpenCollection
+  description: Append notes to a customer's file to record communication history and
+    context. Endpoint - POST /customers/{customerId}/notes.
+- aid: gorilladesk:gorilladesk-users-api
+  name: GorillaDesk Users API
+  tags:
+  - Users
+  - Technicians
+  - Team
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  properties:
+  - url: https://api.gorilladesk.com/
+    type: APIReference
+  - url: openapi/gorilladesk-openapi.yml
+    type: OpenAPI
+  - url: collections/gorilladesk.postman_collection.json
+    type: PostmanCollection
+  - url: collections/gorilladesk.opencollection.json
+    type: OpenCollection
+  description: List and retrieve the users on a GorillaDesk company account -
+    administrators, managers, and technicians. Endpoints - GET /users and GET
+    /users/{userId}.
+- aid: gorilladesk:gorilladesk-company-api
+  name: GorillaDesk Company API
+  tags:
+  - Company
+  - Account
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  properties:
+  - url: https://api.gorilladesk.com/
+    type: APIReference
+  - url: openapi/gorilladesk-openapi.yml
+    type: OpenAPI
+  - url: collections/gorilladesk.postman_collection.json
+    type: PostmanCollection
+  - url: collections/gorilladesk.opencollection.json
+    type: OpenCollection
+  description: Retrieve the account/company details tied to the authenticating API
+    key. Endpoint - GET /company.
+- aid: gorilladesk:gorilladesk-phone-types-api
+  name: GorillaDesk Phone Types API
+  tags:
+  - Reference Data
+  - Phone Types
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  properties:
+  - url: https://api.gorilladesk.com/
+    type: APIReference
+  - url: openapi/gorilladesk-openapi.yml
+    type: OpenAPI
+  - url: collections/gorilladesk.postman_collection.json
+    type: PostmanCollection
+  - url: collections/gorilladesk.opencollection.json
+    type: OpenCollection
+  description: List the phone-type reference values (e.g. mobile, home, work,
+    fax) used when attaching phone numbers to customer contacts. Endpoint - GET
+    /phone-types.
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/gorilladesk
+- type: Website
+  url: https://gorilladesk.com/
+- type: Documentation
+  url: https://api.gorilladesk.com/
+- type: SignUp
+  url: https://beta.gorilladesk.com/addons/api
+- type: Integrations
+  url: https://gorilladesk.com/integrations-library/
+- type: Plans
+  url: plans/gorilladesk-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/gorilladesk-rate-limits.yml
+- type: FinOps
+  url: finops/gorilladesk-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

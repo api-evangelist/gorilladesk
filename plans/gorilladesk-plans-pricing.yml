@@ -1,0 +1,136 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: GorillaDesk
+providerId: gorilladesk
+created: '2026-07-04'
+modified: '2026-07-04'
+reconciled: false
+tags:
+- Field Service Management
+- Pest Control
+- Lawn Care
+- Scheduling
+- Invoicing
+- Plans
+description: >-
+  GorillaDesk is sold as a per-route subscription, not per user. A "route" is a
+  technician's schedule; each additional route adds to the monthly bill.
+  Unlimited administrators, managers, sales staff, and mobile devices are
+  included on every plan at no extra charge. Published 2026 plans are Basic
+  ($49/route/month), Pro ($99/route/month), and Growth ($149/route/month), with
+  a 14-day free trial (no credit card), no setup fees, and no contracts. The
+  main add-on cost is SMS (roughly $5/month for a local number, plus bulk SMS
+  packages). API access is included with a paid subscription - there is no
+  separate API pricing tier and no per-call API fee; any account can generate a
+  per-company Bearer API key from the in-app Addons page.
+notes: >-
+  Per-route rates reflect third-party pricing summaries as of mid-2026 and may
+  vary by billing term (monthly vs. annual) and promotions. Verify current
+  numbers on the GorillaDesk pricing / plans help-center page during
+  reconciliation.
+sources:
+- https://gorilladesk.com/
+- https://intercom.help/gorilladesk/en/articles/431660-plans-pricing
+- https://api.gorilladesk.com/
+plans:
+- id: gorilladesk-basic
+  name: Basic
+  type: paid
+  description: >-
+    Entry field-service plan billed per route/month, with scheduling,
+    invoicing, customer records, and unlimited office staff and mobile devices.
+    Includes public API access via per-company Bearer keys.
+  entries:
+  - label: Route Subscription
+    name: route_subscription
+    type: flat
+    metric: route
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '49'
+    currency: USD
+    userMultiplied: false
+  elements:
+  - name: Scheduling and Dispatch
+  - name: Invoicing
+  - name: Customer Records
+  - name: Unlimited Office Users and Devices
+  - name: Public v1 REST API Access
+- id: gorilladesk-pro
+  name: Pro
+  type: paid
+  description: >-
+    Mid-tier plan billed per route/month adding automation, reporting, and
+    additional field-service features on top of Basic.
+  entries:
+  - label: Route Subscription
+    name: route_subscription
+    type: flat
+    metric: route
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '99'
+    currency: USD
+    userMultiplied: false
+  elements:
+  - name: Everything in Basic
+  - name: Automations
+  - name: Advanced Reporting
+  - name: Public v1 REST API Access
+- id: gorilladesk-growth
+  name: Growth
+  type: paid
+  description: >-
+    Top published plan billed per route/month for larger operations needing the
+    fullest feature set and higher-volume workflows.
+  entries:
+  - label: Route Subscription
+    name: route_subscription
+    type: flat
+    metric: route
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '149'
+    currency: USD
+    userMultiplied: false
+  elements:
+  - name: Everything in Pro
+  - name: Advanced Field-Service Features
+  - name: Priority Support
+  - name: Public v1 REST API Access
+- id: gorilladesk-free-trial
+  name: Free Trial
+  type: trial
+  description: >-
+    14-day free trial with no credit card required, no setup fees, and no
+    contract.
+  entries:
+  - label: Trial Period
+    name: trial_period
+    type: flat
+    metric: days
+    limit: 14
+    timeFrame: day
+    geo: global
+    unit: 1
+    price: '0'
+    currency: USD
+    userMultiplied: false
+  elements:
+  - name: Full Feature Access During Trial
+addOns:
+- name: SMS - Local Number
+  price: '~5'
+  currency: USD
+  unit: month
+  description: Local SMS number for texting customers; bulk SMS packages available separately.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

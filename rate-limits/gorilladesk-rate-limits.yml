@@ -1,0 +1,57 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: GorillaDesk
+providerId: gorilladesk
+created: '2026-07-04'
+modified: '2026-07-04'
+reconciled: false
+tags:
+- Field Service Management
+- Rate Limiting
+- Quotas
+description: >-
+  The GorillaDesk v1 API enforces per-endpoint-group rate limits to protect its
+  infrastructure. Endpoint groups bundle URL paths and HTTP methods together
+  (for example, GETs to /v1/users and POSTs/PUTs to /v1/customers may count as
+  two different groups), letting GorillaDesk allow a higher limit on lightweight
+  requests than on heavier ones. The API does not publish fixed numeric limits;
+  it states the limits are high enough that typical workflows are unaffected.
+  Clients learn their live limit from response headers and must back off on 429.
+notes: >-
+  Numeric per-group limits are not published in the OpenAPI spec; the guidance is
+  to honor the returned headers and the rate_reset value on 429. Values are drawn
+  directly from the public OpenAPI 3.0.3 documentation.
+sources:
+- https://api.gorilladesk.com/
+- https://api.gorilladesk.com/v1/specs
+responseCodes:
+  throttled: 429
+headers:
+- name: x-rate-limit-limit
+  description: Request limit enforced for this endpoint group; some endpoints may allow bursting over this limit.
+- name: x-rate-limit-remaining
+  description: Requests left in the current enforcement window.
+- name: x-rate-limit-reset
+  description: Seconds remaining before this enforcement window ends (as a decimal).
+limits:
+- name: Endpoint Group Requests
+  scope: company
+  metric: requests
+  limit: not published
+  notes: Limits are enforced per endpoint group (path + method) and are not published as fixed numbers; read x-rate-limit-* headers.
+- name: Lightweight Requests
+  scope: company
+  metric: requests
+  limit: higher (unspecified)
+  notes: GET-style lightweight requests are grouped to allow a higher limit than resource-intensive requests.
+policies:
+- name: Honor Rate Reset on 429
+  description: On a 429 (Too Many Requests) response, sleep/pause for the number of seconds indicated by the rate_reset / x-rate-limit-reset value before retrying that endpoint.
+- name: Per-Endpoint-Group Enforcement
+  description: Rate limits apply per endpoint group rather than globally, so throttling on one group does not necessarily throttle another.
+- name: Backoff Strategy
+  description: Implement exponential backoff with jitter and monitor x-rate-limit-remaining to avoid hitting the limit.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

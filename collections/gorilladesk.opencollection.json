@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GorillaDesk v1 API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Company", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve company", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.gorilladesk.com/v1/company" },
+          "docs": "Retrieves the company/account details tied to the authenticating API key."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Users", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List all users", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.gorilladesk.com/v1/users" },
+          "docs": "Lists all users on the company account (administrators, managers, technicians)."
+        },
+        {
+          "info": { "name": "Retrieve a user", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gorilladesk.com/v1/users/:userId",
+            "params": [
+              { "name": "userId", "value": "", "type": "path", "description": "The ID of the user." }
+            ]
+          },
+          "docs": "Retrieves a single user by ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Customers", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List all customers", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.gorilladesk.com/v1/customers" },
+          "docs": "Lists all customers in the company account."
+        },
+        {
+          "info": { "name": "Create a customer", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gorilladesk.com/v1/customers",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Creates a new customer record."
+        },
+        {
+          "info": { "name": "Retrieve a customer", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gorilladesk.com/v1/customers/:customerId",
+            "params": [
+              { "name": "customerId", "value": "", "type": "path", "description": "The ID of the customer." }
+            ]
+          },
+          "docs": "Retrieves a single customer by ID."
+        },
+        {
+          "info": { "name": "Update a customer", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.gorilladesk.com/v1/customers/:customerId",
+            "params": [
+              { "name": "customerId", "value": "", "type": "path", "description": "The ID of the customer." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Updates an existing customer record."
+        },
+        {
+          "info": { "name": "Create a customer note", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gorilladesk.com/v1/customers/:customerId/notes",
+            "params": [
+              { "name": "customerId", "value": "", "type": "path", "description": "The ID of the customer." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Appends a note to a customer's file."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Phone Types", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List all phone types", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.gorilladesk.com/v1/phone-types" },
+          "docs": "Lists the phone-type reference values used on customer contacts."
+        }
+      ]
+    }
+  ]
+}

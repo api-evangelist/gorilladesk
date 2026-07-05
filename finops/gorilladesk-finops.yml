@@ -1,0 +1,92 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: GorillaDesk
+providerId: gorilladesk
+created: '2026-07-04'
+modified: '2026-07-04'
+reconciled: false
+tags:
+- Field Service Management
+- Pest Control
+- Lawn Care
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of GorillaDesk spend. GorillaDesk is a per-route SaaS subscription
+  (a route is a technician's schedule), not a per-user or per-API-call product.
+  The dominant cost driver is the number of routes multiplied by the plan tier
+  (Basic/Pro/Growth); unlimited office users and mobile devices are included.
+  API access carries no separate charge - it is included with any paid plan and
+  metered only by rate limits, not by billing. Secondary variable costs are SMS
+  usage (local number plus bulk packages) and any transaction fees passed through
+  by connected payment processors (Square, Stripe). There is no usage-based API
+  billing to optimize.
+notes: >-
+  Per-route rates are third-party summaries and not reconciled; verify current
+  plan pricing and SMS rates on GorillaDesk's site. Payment-processing fees are
+  billed by the processor (Square/Stripe), not by GorillaDesk.
+sources:
+- https://gorilladesk.com/
+- https://intercom.help/gorilladesk/en/articles/431660-plans-pricing
+- https://api.gorilladesk.com/
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: GorillaDesk
+serviceCategory: Field Service Management Software
+billingModel:
+  pricingCategory: Subscription
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+  - Adjustment
+focusColumns:
+  ServiceName: GorillaDesk
+  ServiceCategory: Field Service Management Software
+  ProviderName: GorillaDesk
+  PublisherName: GorillaDesk
+  InvoiceIssuerName: GorillaDesk
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription
+meters:
+- name: route_subscription
+  description: Number of active routes (technician schedules) billed per month at the plan tier rate.
+  unit: routes
+  aggregation: sum
+  dimensions:
+  - account
+  - plan
+- name: sms_usage
+  description: SMS local number and bulk SMS packages consumed for customer texting.
+  unit: messages
+  aggregation: sum
+  dimensions:
+  - account
+- name: payment_processing
+  description: Transaction fees on payments taken through connected processors (Square, Stripe); billed by the processor, not GorillaDesk.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - processor
+principles:
+- name: Visibility
+  description: Track active route count and plan tier as the primary cost line; monitor SMS and payment-processing fees separately.
+- name: Allocation
+  description: Map routes to technicians / territories so subscription cost aligns with revenue-producing crews.
+- name: Optimization
+  description: Right-size the number of routes to actual crews, pick the plan tier that matches needed features, and consolidate SMS usage; API access adds no marginal cost.
+- name: Accountability
+  description: Assign an owner to review monthly route count and add-on charges against field-service revenue.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

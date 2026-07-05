@@ -1,0 +1,123 @@
+{
+  "info": {
+    "name": "GorillaDesk v1 API",
+    "description": "Public GorillaDesk v1 REST API (https://api.gorilladesk.com/v1). Token (Bearer) authentication with per-company API keys generated on the in-app Addons page.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{bearerToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.gorilladesk.com/v1" },
+    { "key": "bearerToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Company",
+      "item": [
+        {
+          "name": "Retrieve company",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/company", "host": ["{{baseUrl}}"], "path": ["company"] },
+            "description": "Retrieves the company/account details tied to the authenticating API key."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List all users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] },
+            "description": "Lists all users on the company account (administrators, managers, technicians)."
+          }
+        },
+        {
+          "name": "Retrieve a user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/users/:userId", "host": ["{{baseUrl}}"], "path": ["users", ":userId"], "variable": [ { "key": "userId", "value": "" } ] },
+            "description": "Retrieves a single user by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "List all customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/customers", "host": ["{{baseUrl}}"], "path": ["customers"] },
+            "description": "Lists all customers in the company account."
+          }
+        },
+        {
+          "name": "Create a customer",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/customers", "host": ["{{baseUrl}}"], "path": ["customers"] },
+            "description": "Creates a new customer record."
+          }
+        },
+        {
+          "name": "Retrieve a customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/customers/:customerId", "host": ["{{baseUrl}}"], "path": ["customers", ":customerId"], "variable": [ { "key": "customerId", "value": "" } ] },
+            "description": "Retrieves a single customer by ID."
+          }
+        },
+        {
+          "name": "Update a customer",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/customers/:customerId", "host": ["{{baseUrl}}"], "path": ["customers", ":customerId"], "variable": [ { "key": "customerId", "value": "" } ] },
+            "description": "Updates an existing customer record."
+          }
+        },
+        {
+          "name": "Create a customer note",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/customers/:customerId/notes", "host": ["{{baseUrl}}"], "path": ["customers", ":customerId", "notes"], "variable": [ { "key": "customerId", "value": "" } ] },
+            "description": "Appends a note to a customer's file."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phone Types",
+      "item": [
+        {
+          "name": "List all phone types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/phone-types", "host": ["{{baseUrl}}"], "path": ["phone-types"] },
+            "description": "Lists the phone-type reference values used on customer contacts."
+          }
+        }
+      ]
+    }
+  ]
+}
