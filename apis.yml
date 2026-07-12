@@ -134,6 +134,10 @@ apis:
     fax) used when attaching phone numbers to customer contacts. Endpoint - GET
     /phone-types.
 common:
+- type: DomainSecurity
+  url: security/gorilladesk-domain-security.yml
+- type: Authentication
+  url: authentication/gorilladesk-authentication.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/gorilladesk
 - type: Website
