@@ -134,6 +134,8 @@ apis:
     fax) used when attaching phone numbers to customer contacts. Endpoint - GET
     /phone-types.
 common:
+- type: AgenticAccess
+  url: agentic-access/gorilladesk-agentic-access.yml
 - type: DomainSecurity
   url: security/gorilladesk-domain-security.yml
 - type: Authentication
