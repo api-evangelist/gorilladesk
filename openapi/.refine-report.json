@@ -1,0 +1,42 @@
+{
+  "provider": "gorilladesk",
+  "sources": [
+    "gorilladesk-company-api-openapi.yml",
+    "gorilladesk-customer-api-openapi.yml",
+    "gorilladesk-note-api-openapi.yml",
+    "gorilladesk-phone-type-api-openapi.yml",
+    "gorilladesk-user-api-openapi.yml",
+    "gorilladesk-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "gorilladesk-company-api-openapi.yml",
+    "gorilladesk-customer-api-openapi.yml",
+    "gorilladesk-note-api-openapi.yml",
+    "gorilladesk-phone-type-api-openapi.yml",
+    "gorilladesk-user-api-openapi.yml",
+    "gorilladesk-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [
+    "gorilladesk-company-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
+    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1customers~1%7BcustomerId%7D/put/requestBody/content/application~1json/schema",
+    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
+    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/403",
+    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1users~1%7BuserId%7D/get/responses/404",
+    "gorilladesk-note-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
+    "gorilladesk-note-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/403",
+    "gorilladesk-note-api-openapi.yml: dangling $ref: #/paths/~1users~1%7BuserId%7D/get/responses/404",
+    "gorilladesk-phone-type-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
+    "gorilladesk-phone-type-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/403"
+  ],
+  "warnings": [
+    "gorilladesk-company-api-openapi.yml: info.version missing",
+    "gorilladesk-customer-api-openapi.yml: info.version missing",
+    "gorilladesk-note-api-openapi.yml: info.version missing",
+    "gorilladesk-phone-type-api-openapi.yml: info.version missing",
+    "gorilladesk-user-api-openapi.yml: info.version missing",
+    "gorilladesk-users-api-openapi.yml: info.version missing"
+  ],
+  "notes": [],
+  "skipped": []
+}
