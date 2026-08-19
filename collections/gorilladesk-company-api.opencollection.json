@@ -1,0 +1,34 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GorillaDesk Company API"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Company",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gorilladesk.com/v1/company"
+          },
+          "docs": "Retrieve company"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

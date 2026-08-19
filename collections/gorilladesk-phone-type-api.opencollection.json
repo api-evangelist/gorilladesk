@@ -1,0 +1,46 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GorillaDesk Company Phone Type API"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Phone Type",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all phone types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gorilladesk.com/v1/phone-types",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List all phone types"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

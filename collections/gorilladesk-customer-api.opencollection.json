@@ -1,0 +1,183 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GorillaDesk Company Customer API"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customer",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gorilladesk.com/v1/customers",
+            "params": [
+              {
+                "name": "state",
+                "value": "active,deleted",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "active,inactive,lead",
+                "type": "query"
+              },
+              {
+                "name": "account_number",
+                "value": "5000",
+                "type": "query",
+                "description": "Return results where the account_number field is equal this value."
+              },
+              {
+                "name": "created[gt]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the created field is greater than this value."
+              },
+              {
+                "name": "created[gte]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the created field is greater than or equal this value."
+              },
+              {
+                "name": "created[lt]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the created field is less than this value."
+              },
+              {
+                "name": "created[lte]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the created field is less than or equal this value."
+              },
+              {
+                "name": "updated[gt]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the updated field is greater than this value."
+              },
+              {
+                "name": "updated[gte]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the updated field is greater than or equal this value."
+              },
+              {
+                "name": "updated[lt]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the updated field is less than this value."
+              },
+              {
+                "name": "updated[lte]",
+                "value": "2023-05-21T17:32:28+00:00",
+                "type": "query",
+                "description": "Return results where the updated field is less than or equal this value."
+              },
+              {
+                "name": "include",
+                "value": "locations,contacts",
+                "type": "query"
+              },
+              {
+                "name": "sort",
+                "value": "account_number,last_name,-created",
+                "type": "query",
+                "description": "Prefix -[field] sort order is descending."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List all customers"
+        },
+        {
+          "info": {
+            "name": "Create a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gorilladesk.com/v1/customers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a customer"
+        },
+        {
+          "info": {
+            "name": "Retrieve a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gorilladesk.com/v1/customers/:customerId",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "path",
+                "description": "Customer Id"
+              },
+              {
+                "name": "include",
+                "value": "locations,contacts",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve a customer"
+        },
+        {
+          "info": {
+            "name": "Update a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.gorilladesk.com/v1/customers/:customerId",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "path",
+                "description": "Customer Id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a customer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

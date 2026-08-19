@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GorillaDesk Company Users API"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gorilladesk.com/v1/users"
+          }
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
