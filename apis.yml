@@ -37,6 +37,14 @@ tags:
 - Scheduling
 - Invoicing
 - Customers
+- Software-as-a-Service
+tags_raw:
+- Field Service Management
+- Pest Control
+- Lawn Care
+- Scheduling
+- Invoicing
+- Customers
 - SaaS
 created: '2026-07-04'
 modified: '2026-07-04'
@@ -66,6 +74,8 @@ apis:
   humanURL: https://api.gorilladesk.com/
   baseURL: https://api.gorilladesk.com/v1
   tags:
+  - Customers
+  tags_raw:
   - Customer
   properties:
   - type: OpenAPI
@@ -138,6 +148,8 @@ apis:
   humanURL: https://api.gorilladesk.com/
   baseURL: https://api.gorilladesk.com/v1
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
