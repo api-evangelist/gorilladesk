@@ -16,6 +16,18 @@ description: GorillaDesk is field service management software for pest control, 
   out-of-the-box integrations (QuickBooks, Square, Stripe, Google) rather than
   through the public v1 REST spec. A newer, auth-gated v2 API surface
   (apiv2.gdesk.io) exists but is not publicly documented.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: open
