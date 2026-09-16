@@ -154,26 +154,6 @@ apis:
     url: collections/gorilladesk.postman_collection.json
   - type: OpenCollection
     url: collections/gorilladesk.opencollection.json
-- aid: gorilladesk:gorilladesk-users-api
-  name: GorillaDesk Users API
-  description: The Users API from GorillaDesk — 1 operation(s) for users.
-  humanURL: https://api.gorilladesk.com/
-  baseURL: https://api.gorilladesk.com/v1
-  tags:
-  - User
-  tags_raw:
-  - Users
-  properties:
-  - type: OpenAPI
-    url: openapi/gorilladesk-users-api-openapi.yml
-  - type: Documentation
-    url: https://api.gorilladesk.com/
-  - type: APIReference
-    url: https://api.gorilladesk.com/
-  - type: PostmanCollection
-    url: collections/gorilladesk.postman_collection.json
-  - type: OpenCollection
-    url: collections/gorilladesk.opencollection.json
 common:
 - type: AgenticAccess
   url: agentic-access/gorilladesk-agentic-access.yml
