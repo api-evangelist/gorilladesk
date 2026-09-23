@@ -1,42 +1,38 @@
 {
   "provider": "gorilladesk",
   "sources": [
-    "gorilladesk-company-api-openapi.yml",
-    "gorilladesk-customer-api-openapi.yml",
-    "gorilladesk-note-api-openapi.yml",
-    "gorilladesk-phone-type-api-openapi.yml",
-    "gorilladesk-user-api-openapi.yml",
-    "gorilladesk-users-api-openapi.yml"
+    "_original/gorilladesk-openapi.yml"
   ],
   "outputs": [
     "gorilladesk-company-api-openapi.yml",
     "gorilladesk-customer-api-openapi.yml",
     "gorilladesk-note-api-openapi.yml",
     "gorilladesk-phone-type-api-openapi.yml",
-    "gorilladesk-user-api-openapi.yml",
-    "gorilladesk-users-api-openapi.yml"
+    "gorilladesk-user-api-openapi.yml"
   ],
   "archived": [],
   "errors": [
-    "gorilladesk-company-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
-    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1customers~1%7BcustomerId%7D/put/requestBody/content/application~1json/schema",
-    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
-    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/403",
-    "gorilladesk-customer-api-openapi.yml: dangling $ref: #/paths/~1users~1%7BuserId%7D/get/responses/404",
-    "gorilladesk-note-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
-    "gorilladesk-note-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/403",
-    "gorilladesk-note-api-openapi.yml: dangling $ref: #/paths/~1users~1%7BuserId%7D/get/responses/404",
-    "gorilladesk-phone-type-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/401",
-    "gorilladesk-phone-type-api-openapi.yml: dangling $ref: #/paths/~1users/get/responses/403"
+    "gorilladesk-openapi.yml: dangling $ref: #/paths/~1customers~1%7BcustomerId%7D/put/requestBody/content/application~1json/schema",
+    "gorilladesk-openapi.yml: dangling $ref: #/paths/~1users~1%7BuserId%7D/get/responses/404"
   ],
   "warnings": [
-    "gorilladesk-company-api-openapi.yml: info.version missing",
-    "gorilladesk-customer-api-openapi.yml: info.version missing",
-    "gorilladesk-note-api-openapi.yml: info.version missing",
-    "gorilladesk-phone-type-api-openapi.yml: info.version missing",
-    "gorilladesk-user-api-openapi.yml: info.version missing",
-    "gorilladesk-users-api-openapi.yml: info.version missing"
+    "gorilladesk-openapi.yml: info.version missing"
   ],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "gorilladesk-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "gorilladesk-openapi.yml: declared missing tag: Company",
+    "gorilladesk-openapi.yml: declared missing tag: Customer",
+    "gorilladesk-openapi.yml: declared missing tag: Note",
+    "gorilladesk-openapi.yml: declared missing tag: Phone Type",
+    "gorilladesk-openapi.yml: declared missing tag: User",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "gorilladesk-company-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "gorilladesk-customer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "gorilladesk-note-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "gorilladesk-phone-type-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "gorilladesk-user-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
