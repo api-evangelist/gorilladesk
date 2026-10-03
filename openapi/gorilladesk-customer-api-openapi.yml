@@ -306,26 +306,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Contact:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 5aXrGzNyLY
-        first_name:
-          type: string
-          example: John
-        last_name:
-          type: string
-          example: Doe
-        email:
-          type: string
-          example: example@gmail.com
-        phones:
-          type: array
-          items:
-            type: object
-            $ref: '#/components/schemas/CustomerPhone'
     Customer:
       type: object
       properties:
@@ -429,6 +409,26 @@ components:
           type: string
           description: Phone type Id
           example: 0nk8PGvAO
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 5aXrGzNyLY
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: example@gmail.com
+        phones:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/CustomerPhone'
     Location:
       type: object
       required:
