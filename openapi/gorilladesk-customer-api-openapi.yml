@@ -306,6 +306,69 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Location:
+      type: object
+      required:
+      - address_line_1
+      - city
+      - state
+      - zip
+      properties:
+        id:
+          type: string
+          example: 5aXrGzNyLY
+          readOnly: true
+        name:
+          type: string
+          example: Home
+        address_to:
+          type: string
+          example: John Doe
+        address_line_1:
+          type: string
+          example: 523 East 72nd Street
+        address_line_2:
+          type: string
+          example: ''
+        city:
+          type: string
+          example: New York
+        state:
+          type: string
+          example: NY
+        zip:
+          type: string
+          example: '10021'
+        county:
+          type: string
+          example: ''
+        billing_to:
+          type: string
+          example: John Doe
+        billing_address_line_1:
+          type: string
+          example: 523 East 72nd Street
+        billing_address_line_2:
+          type: string
+          example: ''
+        billing_city:
+          type: string
+          example: New York
+        billing_state:
+          type: string
+          example: NY
+        billing_zip:
+          type: string
+          example: '10021'
+        latitude:
+          type: string
+          example: ''
+        longitude:
+          type: string
+          example: ''
+        note:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetuer adipiscing eliti
     Customer:
       type: object
       properties:
@@ -429,69 +492,6 @@ components:
           items:
             type: object
             $ref: '#/components/schemas/CustomerPhone'
-    Location:
-      type: object
-      required:
-      - address_line_1
-      - city
-      - state
-      - zip
-      properties:
-        id:
-          type: string
-          example: 5aXrGzNyLY
-          readOnly: true
-        name:
-          type: string
-          example: Home
-        address_to:
-          type: string
-          example: John Doe
-        address_line_1:
-          type: string
-          example: 523 East 72nd Street
-        address_line_2:
-          type: string
-          example: ''
-        city:
-          type: string
-          example: New York
-        state:
-          type: string
-          example: NY
-        zip:
-          type: string
-          example: '10021'
-        county:
-          type: string
-          example: ''
-        billing_to:
-          type: string
-          example: John Doe
-        billing_address_line_1:
-          type: string
-          example: 523 East 72nd Street
-        billing_address_line_2:
-          type: string
-          example: ''
-        billing_city:
-          type: string
-          example: New York
-        billing_state:
-          type: string
-          example: NY
-        billing_zip:
-          type: string
-          example: '10021'
-        latitude:
-          type: string
-          example: ''
-        longitude:
-          type: string
-          example: ''
-        note:
-          type: string
-          example: Lorem ipsum dolor sit amet, consectetuer adipiscing eliti
   securitySchemes:
     Bearer:
       type: http
