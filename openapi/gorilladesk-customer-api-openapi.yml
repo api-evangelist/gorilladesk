@@ -306,6 +306,24 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CustomerPhone:
+      type: object
+      required:
+      - phone
+      - type
+      properties:
+        id:
+          type: string
+          description: Phone Id
+          example: 0nk8PGvAO
+        phone:
+          type: string
+          example: 212-456-7890
+          description: Phone number
+        type:
+          type: string
+          description: Phone type Id
+          example: 0nk8PGvAO
     Location:
       type: object
       required:
@@ -369,6 +387,26 @@ components:
         note:
           type: string
           example: Lorem ipsum dolor sit amet, consectetuer adipiscing eliti
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 5aXrGzNyLY
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: example@gmail.com
+        phones:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/CustomerPhone'
     Customer:
       type: object
       properties:
@@ -454,44 +492,6 @@ components:
           items:
             type: object
             $ref: '#/components/schemas/Contact'
-    CustomerPhone:
-      type: object
-      required:
-      - phone
-      - type
-      properties:
-        id:
-          type: string
-          description: Phone Id
-          example: 0nk8PGvAO
-        phone:
-          type: string
-          example: 212-456-7890
-          description: Phone number
-        type:
-          type: string
-          description: Phone type Id
-          example: 0nk8PGvAO
-    Contact:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 5aXrGzNyLY
-        first_name:
-          type: string
-          example: John
-        last_name:
-          type: string
-          example: Doe
-        email:
-          type: string
-          example: example@gmail.com
-        phones:
-          type: array
-          items:
-            type: object
-            $ref: '#/components/schemas/CustomerPhone'
   securitySchemes:
     Bearer:
       type: http
