@@ -83,18 +83,52 @@ apis:
     url: collections/gorilladesk.postman_collection.json
   - type: OpenCollection
     url: collections/gorilladesk.opencollection.json
-- aid: gorilladesk:gorilladesk-customer-api
-  name: GorillaDesk Customer API
-  description: The Customer API from GorillaDesk — 2 operation(s) for customer.
+- aid: gorilladesk:gorilladesk-branches-api
+  name: GorillaDesk Branches API
+  description: The Branches API from GorillaDesk — 1 operation(s) for branches.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Branches
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-branches-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-credits-api
+  name: GorillaDesk Credits API
+  description: The Credits API from GorillaDesk — 2 operation(s) for credits.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Credits
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-credits-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-customers-api
+  name: GorillaDesk Customers API
+  description: The Customers API from GorillaDesk — 3 operation(s) for customers.
   humanURL: https://api.gorilladesk.com/
   baseURL: https://api.gorilladesk.com/v1
   tags:
   - Customers
-  tags_raw:
-  - Customer
   properties:
   - type: OpenAPI
-    url: openapi/gorilladesk-customer-api-openapi.yml
+    url: openapi/gorilladesk-customers-api-openapi.yml
   - type: Documentation
     url: https://api.gorilladesk.com/
   - type: APIReference
@@ -103,16 +137,16 @@ apis:
     url: collections/gorilladesk.postman_collection.json
   - type: OpenCollection
     url: collections/gorilladesk.opencollection.json
-- aid: gorilladesk:gorilladesk-note-api
-  name: GorillaDesk Note API
-  description: The Note API from GorillaDesk — 1 operation(s) for note.
+- aid: gorilladesk:gorilladesk-documents-api
+  name: GorillaDesk Documents API
+  description: The Documents API from GorillaDesk — 2 operation(s) for documents.
   humanURL: https://api.gorilladesk.com/
   baseURL: https://api.gorilladesk.com/v1
   tags:
-  - Note
+  - Documents
   properties:
   - type: OpenAPI
-    url: openapi/gorilladesk-note-api-openapi.yml
+    url: openapi/gorilladesk-documents-api-openapi.yml
   - type: Documentation
     url: https://api.gorilladesk.com/
   - type: APIReference
@@ -121,16 +155,16 @@ apis:
     url: collections/gorilladesk.postman_collection.json
   - type: OpenCollection
     url: collections/gorilladesk.opencollection.json
-- aid: gorilladesk:gorilladesk-phone-type-api
-  name: GorillaDesk Phone Type API
-  description: The Phone Type API from GorillaDesk — 1 operation(s) for phone type.
+- aid: gorilladesk:gorilladesk-estimates-api
+  name: GorillaDesk Estimates API
+  description: The Estimates API from GorillaDesk — 2 operation(s) for estimates.
   humanURL: https://api.gorilladesk.com/
   baseURL: https://api.gorilladesk.com/v1
   tags:
-  - Phone Type
+  - Estimates
   properties:
   - type: OpenAPI
-    url: openapi/gorilladesk-phone-type-api-openapi.yml
+    url: openapi/gorilladesk-estimates-api-openapi.yml
   - type: Documentation
     url: https://api.gorilladesk.com/
   - type: APIReference
@@ -139,16 +173,232 @@ apis:
     url: collections/gorilladesk.postman_collection.json
   - type: OpenCollection
     url: collections/gorilladesk.opencollection.json
-- aid: gorilladesk:gorilladesk-user-api
-  name: GorillaDesk User API
-  description: The User API from GorillaDesk — 2 operation(s) for user.
+- aid: gorilladesk:gorilladesk-invoices-api
+  name: GorillaDesk Invoices API
+  description: The Invoices API from GorillaDesk — 2 operation(s) for invoices.
   humanURL: https://api.gorilladesk.com/
   baseURL: https://api.gorilladesk.com/v1
   tags:
-  - User
+  - Invoices
   properties:
   - type: OpenAPI
-    url: openapi/gorilladesk-user-api-openapi.yml
+    url: openapi/gorilladesk-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-jobs-api
+  name: GorillaDesk Jobs API
+  description: The Jobs API from GorillaDesk — 5 operation(s) for jobs.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-jobs-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-line-items-api
+  name: GorillaDesk Line Items API
+  description: The Line Items API from GorillaDesk — 2 operation(s) for line items.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Line Items
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-line-items-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-notes-api
+  name: GorillaDesk Notes API
+  description: The Notes API from GorillaDesk — 1 operation(s) for notes.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-notes-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-payment-methods-api
+  name: GorillaDesk Payment Methods API
+  description: The Payment Methods API from GorillaDesk — 2 operation(s) for payment methods.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Payment Methods
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-payment-methods-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-payments-api
+  name: GorillaDesk Payments API
+  description: The Payments API from GorillaDesk — 2 operation(s) for payments.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-payments-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-phone-types-api
+  name: GorillaDesk Phone Types API
+  description: The Phone Types API from GorillaDesk — 1 operation(s) for phone types.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Phone Types
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-phone-types-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-recurring-invoices-api
+  name: GorillaDesk Recurring Invoices API
+  description: The Recurring Invoices API from GorillaDesk — 2 operation(s) for recurring invoices.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Recurring Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-recurring-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-schedules-api
+  name: GorillaDesk Schedules API
+  description: The Schedules API from GorillaDesk — 2 operation(s) for schedules.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Schedules
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-schedules-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-service-templates-api
+  name: GorillaDesk Service Templates API
+  description: The Service Templates API from GorillaDesk — 2 operation(s) for service templates.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Service Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-service-templates-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-sources-api
+  name: GorillaDesk Sources API
+  description: The Sources API from GorillaDesk — 2 operation(s) for sources.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Sources
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-sources-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-taxes-api
+  name: GorillaDesk Taxes API
+  description: The Taxes API from GorillaDesk — 2 operation(s) for taxes.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Taxes
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-taxes-api-openapi.yml
+  - type: Documentation
+    url: https://api.gorilladesk.com/
+  - type: APIReference
+    url: https://api.gorilladesk.com/
+  - type: PostmanCollection
+    url: collections/gorilladesk.postman_collection.json
+  - type: OpenCollection
+    url: collections/gorilladesk.opencollection.json
+- aid: gorilladesk:gorilladesk-users-api
+  name: GorillaDesk Users API
+  description: The Users API from GorillaDesk — 2 operation(s) for users.
+  humanURL: https://api.gorilladesk.com/
+  baseURL: https://api.gorilladesk.com/v1
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/gorilladesk-users-api-openapi.yml
   - type: Documentation
     url: https://api.gorilladesk.com/
   - type: APIReference

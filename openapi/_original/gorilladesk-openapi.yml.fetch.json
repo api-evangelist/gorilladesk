@@ -1,0 +1,12 @@
+{
+ "url": "https://api.gorilladesk.com/v1/specs",
+ "final": "https://api.gorilladesk.com/v1/specs",
+ "status": 200,
+ "content_type": "text/yaml; charset=utf-8",
+ "bytes": 109776,
+ "sha256": "695d4c0ddc6ea38ac658e29d5882fc66a3307accedd3bb9ae921604c3bbd2d1f",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

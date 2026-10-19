@@ -1,0 +1,80 @@
+openapi: 3.2.0
+info:
+  title: GorillaDesk Company API
+  description: '# Introduction
+
+    The GorillaDesk API is organized around REST.'
+  x-logo:
+    url: https://cdn.gorilladesk.com/assets/images/gorilladesk.png
+    altText: GorillaDesk logo
+servers:
+- url: https://api.gorilladesk.com/v1
+security:
+- Bearer: []
+tags:
+- name: Company
+paths:
+  /company:
+    get:
+      summary: Retrieve company
+      tags:
+      - Company
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Company'
+        '401':
+          $ref: '#/paths/~1users/get/responses/401'
+      operationId: getCompany
+      x-operation-id-source: derived
+components:
+  schemas:
+    Company:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Pest Control
+        email:
+          type: string
+          example: pestcontrol@gmail.com
+        phone:
+          type: string
+          example: (+1)202-555-0156
+        website:
+          type: string
+          example: pestcontrol.com
+        address:
+          type: string
+          example: 12 Norman Stretton Road
+        city:
+          type: string
+          example: Deridder
+        state:
+          type: string
+          example: LA
+        zip:
+          type: string
+          example: '30634'
+        timezone:
+          type: string
+          example: America/Los_Angeles
+        office_hours:
+          type: object
+          properties:
+            start:
+              type: string
+              example: 07:00:00
+            end:
+              type: string
+              example: '18:00:00'
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer

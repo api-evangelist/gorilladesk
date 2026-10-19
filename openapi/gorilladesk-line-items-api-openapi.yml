@@ -1,0 +1,191 @@
+openapi: 3.2.0
+info:
+  title: GorillaDesk Line Items API
+  version: 1.0.0
+  description: '# Introduction
+
+    The GorillaDesk API is organized around REST.
+
+
+    Our API has predictable resource-oriented URLs, accepts JSON-encoded and form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs..
+
+
+    # Authentication
+
+
+    The GorillaDesk API uses Token authentication. API keys are per-company and can be generated and deleted in the Addons page.
+
+
+    # Rate Limits
+
+
+    We enforce API call rate limits to protect our infrastructure from excessive request rates, to keep GorillaDesk fast and stable for everyone. These limits are high enough that typical API workflows aren''t affected. However, please do code your integration to follow the rule below:
+
+
+    **If you receive a response status code of 429 (Too Many Requests), please sleep/pause for the number of seconds specified by the rate_reset value before making additional requests to that endpoint.**
+
+
+    Rate limits are enforced per endpoint group. Endpoint groups are used to provide more granular control by grouping endpoint URL paths and methods (e.g. GET, PUT, etc.) together. For instance, GETs to /v1/users/ and POSTs/PUTs to /v1/customers/ may be counted as two different API groups. This allows us to offer a higher limit on lightweight requests than we would be able to on more resource intensive request types.
+
+
+    API responses will have the following headers to provide rate limiting statistics about the limit it''s closest to hitting.
+
+
+    - `x-rate-limit-limit`: Request limit enforced for this endpoint, some endpoints may allow bursting over this limit
+
+    - `x-rate-limit-remaining`: Requests left in the enforcement window
+
+    - `x-rate-limit-reset`: Seconds remaining before this enforcement window ends (as a decimal).
+
+
+    # Model Context Protocol (MCP)
+
+
+    You can connect AI agents and tools to GorillaDesk via the Model Context Protocol. See the GorillaDesk MCP documentation.'
+  x-logo:
+    url: https://cdn.gorilladesk.com/assets/images/gorilladesk.png
+    altText: GorillaDesk logo
+servers:
+- url: https://api.gorilladesk.com/v1
+security:
+- Bearer: []
+tags:
+- name: Line Items
+paths:
+  /items:
+    get:
+      operationId: listLineItems
+      summary: List all line items
+      tags:
+      - Line Items
+      parameters:
+      - in: query
+        name: keyword
+        description: Search line items by name (case-insensitive partial match)
+        schema:
+          type: string
+          maxLength: 255
+        example: Service
+      - in: query
+        name: sort
+        description: 'Prefix -[field] for descending order. Default: name asc.'
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - name
+            - cost
+            - id
+        example: name,-cost
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LineItem'
+                  has_more:
+                    type: boolean
+        '400':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+  /items/{lineItemId}:
+    get:
+      operationId: getLineItem
+      summary: Retrieve a line item
+      tags:
+      - Line Items
+      parameters:
+      - in: path
+        name: lineItemId
+        description: Line item Id
+        required: true
+        schema:
+          type: string
+        example: 5aXrGzNyLY
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LineItem'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+components:
+  schemas:
+    LineItem:
+      type: object
+      description: A line item from the company's catalogue.
+      properties:
+        id:
+          type: string
+          description: The line item Id
+          example: 0nk8PGvAO
+        name:
+          type: string
+          example: Service Call
+        cost:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: Unit cost. Null if not set.
+          example: 99.99
+        tax1:
+          description: First assigned tax, or null if none.
+          type:
+          - object
+          - 'null'
+          properties:
+            id:
+              type: string
+              example: 5aXrGzNyLY
+            name:
+              type: string
+              example: GST
+        tax2:
+          description: Second assigned tax, or null if none.
+          type:
+          - object
+          - 'null'
+          properties:
+            id:
+              type: string
+              example: MqbgNm4oXE
+            name:
+              type: string
+              example: City Tax
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+x-sidebar-links:
+- label: Model Context Protocol (MCP)
+  url: https://api.gorilladesk.com/mcp/v1/docs
+  target: _blank

@@ -4,35 +4,36 @@
     "_original/gorilladesk-openapi.yml"
   ],
   "outputs": [
+    "gorilladesk-branches-api-openapi.yml",
     "gorilladesk-company-api-openapi.yml",
-    "gorilladesk-customer-api-openapi.yml",
-    "gorilladesk-note-api-openapi.yml",
-    "gorilladesk-phone-type-api-openapi.yml",
-    "gorilladesk-user-api-openapi.yml"
+    "gorilladesk-credits-api-openapi.yml",
+    "gorilladesk-customers-api-openapi.yml",
+    "gorilladesk-documents-api-openapi.yml",
+    "gorilladesk-estimates-api-openapi.yml",
+    "gorilladesk-invoices-api-openapi.yml",
+    "gorilladesk-jobs-api-openapi.yml",
+    "gorilladesk-line-items-api-openapi.yml",
+    "gorilladesk-notes-api-openapi.yml",
+    "gorilladesk-payment-methods-api-openapi.yml",
+    "gorilladesk-payments-api-openapi.yml",
+    "gorilladesk-phone-types-api-openapi.yml",
+    "gorilladesk-recurring-invoices-api-openapi.yml",
+    "gorilladesk-schedules-api-openapi.yml",
+    "gorilladesk-service-templates-api-openapi.yml",
+    "gorilladesk-sources-api-openapi.yml",
+    "gorilladesk-taxes-api-openapi.yml",
+    "gorilladesk-users-api-openapi.yml"
   ],
   "archived": [],
   "errors": [
     "gorilladesk-openapi.yml: dangling $ref: #/paths/~1customers~1%7BcustomerId%7D/put/requestBody/content/application~1json/schema",
-    "gorilladesk-openapi.yml: dangling $ref: #/paths/~1users~1%7BuserId%7D/get/responses/404"
+    "gorilladesk-openapi.yml: dangling $ref: #/paths/~1jobs~1%7BjobId%7D/get/responses/404"
   ],
-  "warnings": [
-    "gorilladesk-openapi.yml: info.version missing"
-  ],
+  "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "gorilladesk-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "gorilladesk-openapi.yml: declared missing tag: Company",
-    "gorilladesk-openapi.yml: declared missing tag: Customer",
-    "gorilladesk-openapi.yml: declared missing tag: Note",
-    "gorilladesk-openapi.yml: declared missing tag: Phone Type",
-    "gorilladesk-openapi.yml: declared missing tag: User",
-    "apis.yml register: already-registered"
+    "apis.yml register: written (+18 apis, 19 total)"
   ],
-  "skipped": [
-    "gorilladesk-company-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "gorilladesk-customer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "gorilladesk-note-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "gorilladesk-phone-type-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "gorilladesk-user-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

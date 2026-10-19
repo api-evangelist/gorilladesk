@@ -1,0 +1,980 @@
+openapi: 3.2.0
+info:
+  title: GorillaDesk Jobs API
+  version: 1.0.0
+  description: '# Introduction
+
+    The GorillaDesk API is organized around REST.
+
+
+    Our API has predictable resource-oriented URLs, accepts JSON-encoded and form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs..
+
+
+    # Authentication
+
+
+    The GorillaDesk API uses Token authentication. API keys are per-company and can be generated and deleted in the Addons page.
+
+
+    # Rate Limits
+
+
+    We enforce API call rate limits to protect our infrastructure from excessive request rates, to keep GorillaDesk fast and stable for everyone. These limits are high enough that typical API workflows aren''t affected. However, please do code your integration to follow the rule below:
+
+
+    **If you receive a response status code of 429 (Too Many Requests), please sleep/pause for the number of seconds specified by the rate_reset value before making additional requests to that endpoint.**
+
+
+    Rate limits are enforced per endpoint group. Endpoint groups are used to provide more granular control by grouping endpoint URL paths and methods (e.g. GET, PUT, etc.) together. For instance, GETs to /v1/users/ and POSTs/PUTs to /v1/customers/ may be counted as two different API groups. This allows us to offer a higher limit on lightweight requests than we would be able to on more resource intensive request types.
+
+
+    API responses will have the following headers to provide rate limiting statistics about the limit it''s closest to hitting.
+
+
+    - `x-rate-limit-limit`: Request limit enforced for this endpoint, some endpoints may allow bursting over this limit
+
+    - `x-rate-limit-remaining`: Requests left in the enforcement window
+
+    - `x-rate-limit-reset`: Seconds remaining before this enforcement window ends (as a decimal).
+
+
+    # Model Context Protocol (MCP)
+
+
+    You can connect AI agents and tools to GorillaDesk via the Model Context Protocol. See the GorillaDesk MCP documentation.'
+  x-logo:
+    url: https://cdn.gorilladesk.com/assets/images/gorilladesk.png
+    altText: GorillaDesk logo
+servers:
+- url: https://api.gorilladesk.com/v1
+security:
+- Bearer: []
+tags:
+- name: Jobs
+paths:
+  /jobs:
+    get:
+      summary: List jobs
+      tags:
+      - Jobs
+      parameters:
+      - in: query
+        name: customer_id
+        description: Filter to jobs for one customer.
+        schema:
+          type: string
+      - in: query
+        name: state
+        description: Filter by lifecycle state. Default returns only active.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - active
+            - deleted
+        example: active,deleted
+      - in: query
+        name: date[gt]
+        description: Return results where the date field is strictly greater than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-07-01T00:00:00+00:00'
+      - in: query
+        name: date[gte]
+        description: Return results where the date field is greater than or equal to this value.
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: date[lt]
+        description: Return results where the date field is strictly less than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-07-31T23:59:59+00:00'
+      - in: query
+        name: date[lte]
+        description: Return results where the date field is less than or equal to this value.
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: keyword
+        description: Free-text match across job name and location.
+        schema:
+          type: string
+      - in: query
+        name: schedule_ids
+        description: Filter to jobs assigned to one or more schedules.
+        schema:
+          type: array
+          items:
+            type: string
+        example: 0nk8PGvAO,1bC2dEfG
+      - in: query
+        name: include
+        description: 'Expand related objects. Without `include`, list rows only carry
+
+          the scalar `customer_id`. Every listed value adds a nested block.
+
+          '
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - customer
+            - location
+            - schedules
+        example: customer,location,schedules
+      - in: query
+        name: sort
+        description: Prefix -[field] for descending order.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - date
+            - created
+        example: -date
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+                  has_more:
+                    type: boolean
+        '401':
+          description: Unauthorized error
+        '403':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - error
+                - message
+                properties:
+                  error:
+                    type:
+                    - object
+                    - 'null'
+                  message:
+                    type: string
+      operationId: getJobs
+      x-operation-id-source: derived
+  /jobs/{jobId}:
+    get:
+      summary: Retrieve a job
+      tags:
+      - Jobs
+      parameters:
+      - in: path
+        name: jobId
+        description: Job ID.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: include
+        description: Include related objects in the response.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - customer
+            - location
+            - schedules
+        example: customer,location,schedules
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Job'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          description: Not Found
+      operationId: getJobsByJobId
+      x-operation-id-source: derived
+  /jobs/{jobId}/activities:
+    get:
+      summary: List job activities
+      tags:
+      - Jobs
+      parameters:
+      - in: path
+        name: jobId
+        description: Job ID.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: date[gt]
+        description: Return activities where the date is strictly greater than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-03-01T00:00:00+00:00'
+      - in: query
+        name: date[lt]
+        description: Return activities where the date is strictly less than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-03-20T00:00:00+00:00'
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JobActivity'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+      operationId: getJobsByJobIdActivities
+      x-operation-id-source: derived
+  /jobs/{jobId}/devices:
+    get:
+      summary: List job devices
+      tags:
+      - Jobs
+      parameters:
+      - in: path
+        name: jobId
+        description: Job ID.
+        required: true
+        schema:
+          type: string
+          example: x1eW6yGmMA
+      - in: query
+        name: keyword
+        description: Search by device name.
+        schema:
+          type: string
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+      operationId: getJobsByJobIdDevices
+      x-operation-id-source: derived
+  /jobs/{jobId}/materials:
+    get:
+      summary: List job materials
+      tags:
+      - Jobs
+      parameters:
+      - in: path
+        name: jobId
+        description: Job hash ID.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: keyword
+        description: Search by material name.
+        schema:
+          type: string
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Material'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+      operationId: getJobsByJobIdMaterials
+      x-operation-id-source: derived
+components:
+  schemas:
+    Material:
+      type: object
+      description: A material.
+      properties:
+        id:
+          type: string
+          description: Material ID.
+          example: x1eW6yGmMA
+        name:
+          type:
+          - string
+          - 'null'
+          description: Material name.
+          example: Chemical X
+        units:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unit ID.
+                example: aBcD123
+              name:
+                type: string
+                description: Unit name.
+                example: Gallons
+              quantity:
+                type: number
+                format: float
+                description: Unit quantity.
+                example: 2.5
+          description: Material units.
+        dilution:
+          type:
+          - string
+          - 'null'
+          description: Dilution ratio.
+          example: '1:10'
+        method:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Method ID.
+                example: xYz987
+              name:
+                type: string
+                description: Method name.
+                example: Spray
+          description: Application methods.
+        custom:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Custom attribute ID.
+                example: gHj789
+              name:
+                type: string
+                description: Custom attribute name.
+                example: Extra strength
+          description: Custom material properties.
+        locations:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Location ID.
+                example: rSt012
+              name:
+                type: string
+                description: Location name.
+                example: Front Yard
+          description: Locations where the material was applied.
+        targets:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Target ID.
+                example: pQr456
+              name:
+                type: string
+                description: Target name.
+                example: Ants
+          description: Targeted pests or items.
+        area:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Area ID.
+                example: kLm456
+              name:
+                type: string
+                description: Area name.
+                example: Backyard
+              quantity:
+                type: number
+                format: float
+                description: Treated area quantity.
+                example: 100.5
+          description: Treated areas.
+    CustomerPhone:
+      type: object
+      required:
+      - phone
+      - type
+      properties:
+        id:
+          type: string
+          description: Phone Id
+          example: 0nk8PGvAO
+        phone:
+          type: string
+          example: 212-456-7890
+          description: Phone number
+        type:
+          type: string
+          description: Phone type Id
+          example: 0nk8PGvAO
+    Device:
+      type: object
+      description: A device installed at a job site.
+      properties:
+        id:
+          type: string
+          description: Device id.
+          example: D8mN3pQ
+        name:
+          type:
+          - string
+          - 'null'
+          description: Device name.
+          example: Bait Station A1
+        barcode:
+          type:
+          - string
+          - 'null'
+          description: Device barcode.
+          example: BC-123456
+        check_in:
+          type:
+          - string
+          - 'null'
+          description: Check-in time recorded by the technician, as a 24-hour `HH:MM:SS` string. Times recorded as a Unix timestamp are converted to the company timezone. `null` when no check-in was recorded.
+          pattern: ^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$
+          example: 07:00:00
+        check_out:
+          type:
+          - string
+          - 'null'
+          description: Check-out time recorded by the technician, as a 24-hour `HH:MM:SS` string. Same conversion rules as `check_in`. `null` when no check-out was recorded.
+          pattern: ^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$
+          example: 08:00:00
+        type:
+          type:
+          - object
+          - 'null'
+          description: Device type.
+          properties:
+            id:
+              type: string
+              description: Type ID.
+              example: tYp123
+            name:
+              type: string
+              description: Type name.
+              example: Bait Station
+        status:
+          type:
+          - object
+          - 'null'
+          description: Device status.
+          properties:
+            id:
+              type: string
+              description: Status ID.
+              example: sTa456
+            name:
+              type: string
+              description: Status name.
+              example: Active
+        area:
+          type:
+          - object
+          - 'null'
+          description: Area where the device is located.
+          properties:
+            id:
+              type: string
+              description: Area ID.
+              example: aRe789
+            name:
+              type: string
+              description: Area name.
+              example: Backyard
+        level:
+          type:
+          - object
+          - 'null'
+          description: Device level.
+          properties:
+            id:
+              type: string
+              description: Level ID.
+              example: lEv012
+            name:
+              type: string
+              description: Level name.
+              example: Ground
+    JobActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Activity ID.
+          example: 8gK9p2L
+        message:
+          type: string
+          description: Human-readable message describing the activity.
+          example: Job confirmed
+        date:
+          type: string
+          format: date-time
+          description: When the activity occurred, in ISO 8601 with timezone.
+          example: '2026-03-01T10:00:00+00:00'
+    Location:
+      type: object
+      description: A physical location associated with a customer.
+      required:
+      - address_line_1
+      - city
+      - state
+      - zip
+      properties:
+        id:
+          description: Location ID.
+          type: string
+          example: 5aXrGzNyLY
+          readOnly: true
+        name:
+          description: Location name (e.g. Home, Office).
+          type: string
+          example: Home
+        address_to:
+          description: Attention line for this address.
+          type: string
+          example: John Doe
+        address_line_1:
+          description: Primary street address.
+          type: string
+          example: 523 East 72nd Street
+        address_line_2:
+          description: Secondary street address (apartment, suite, etc.).
+          type: string
+          example: ''
+        city:
+          description: City.
+          type: string
+          example: New York
+        state:
+          description: State or province.
+          type: string
+          example: NY
+        zip:
+          description: Postal / ZIP code.
+          type: string
+          example: '10021'
+        county:
+          description: County.
+          type: string
+          example: ''
+        billing_to:
+          description: Attention line for billing address.
+          type: string
+          example: John Doe
+        billing_address_line_1:
+          description: Billing street address.
+          type: string
+          example: 523 East 72nd Street
+        billing_address_line_2:
+          description: Billing secondary address.
+          type: string
+          example: ''
+        billing_city:
+          description: Billing city.
+          type: string
+          example: New York
+        billing_state:
+          description: Billing state.
+          type: string
+          example: NY
+        billing_zip:
+          description: Billing postal code.
+          type: string
+          example: '10021'
+        latitude:
+          description: Latitude coordinate.
+          type: string
+          example: ''
+        longitude:
+          description: Longitude coordinate.
+          type: string
+          example: ''
+        note:
+          description: Location notes.
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetuer adipiscing eliti
+    Job:
+      type: object
+      description: 'A job. Returned from both list (`/v1/jobs`) and detail (`/v1/jobs/{id}`).
+
+
+        Scalar fields are always present. Nested objects (`customer`, `location`,
+
+        `schedules`) populate only when requested via the `include` query parameter.
+
+        '
+      properties:
+        id:
+          type: string
+          description: Job ID.
+          example: 8gK9p2L
+        work_order_number:
+          type:
+          - string
+          - 'null'
+          description: Auto-generated work order reference.
+          example: WO-1042
+        name:
+          type:
+          - string
+          - 'null'
+          example: Monthly Service
+        date:
+          type: string
+          format: date-time
+          description: Scheduled start datetime in ISO 8601 with timezone.
+          example: '2026-04-23T09:00:00+00:00'
+        status:
+          type: object
+          description: Job workflow status.
+          properties:
+            id:
+              type: string
+              example: St3kP9q
+            label:
+              type: string
+              example: Pending Booking
+        state:
+          type: string
+          enum:
+          - active
+          - deleted
+          description: Lifecycle state.
+          example: active
+        in_work_pool:
+          type: boolean
+          description: True when the job is in the workpool (no assignee yet).
+          example: false
+        is_always_confirmed:
+          type:
+          - boolean
+          - 'null'
+          description: True when the service template is always confirmed.
+          example: false
+        length:
+          type:
+          - integer
+          - 'null'
+          description: Scheduled duration in minutes.
+          example: 60
+        check_in_time:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Actual check-in timestamp. Null when the technician has not started the job.
+          example: '2026-04-23T09:02:00+00:00'
+        check_out_time:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Actual check-out timestamp. Null when the technician has not finished.
+          example: '2026-04-23T10:05:00+00:00'
+        created:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Created date of the job in ISO 8601.
+          example: '2026-04-23T09:00:00+00:00'
+        updated:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Last-updated timestamp of the job in ISO 8601.
+          example: '2026-04-23T10:05:00+00:00'
+        recurrence_summary:
+          type:
+          - string
+          - 'null'
+          description: Human-readable recurrence summary. Non-null when part of a recurring series.
+          example: Monthly on the 6th, until 07/09/2026. Except January, April, September
+        customer:
+          $ref: '#/components/schemas/Customer/allOf/0'
+        location:
+          $ref: '#/components/schemas/Location'
+        schedules:
+          type: array
+          description: Schedules assigned to the job.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: U7vR2lP
+              name:
+                type: string
+                example: Schedule 1
+              user:
+                $ref: '#/components/schemas/User'
+                description: The technician assigned via this schedule.
+    Customer:
+      allOf:
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The customer ID.
+            example: 0nk8PGvAO
+          account_number:
+            type: string
+            description: Numeric account identifier for the customer.
+            example: '5047'
+          last_name:
+            type: string
+            example: Doe
+          first_name:
+            type: string
+            example: John
+          profile_url:
+            type: string
+            example: https://v3.gorilladesk.com/customers/5393
+          email:
+            type: string
+            example: example@gmail.com
+          phones:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/CustomerPhone'
+          company:
+            type: string
+            example: NL software
+          source:
+            type:
+            - object
+            - 'null'
+            description: Where the customer originated. Null if no source is assigned.
+            properties:
+              id:
+                type: string
+                description: Source ID.
+                example: aWGl2VlY78
+              name:
+                type: string
+                example: Facebook
+          tags:
+            type: array
+            description: Customer-level tag labels attached to this customer.
+            items:
+              type: string
+            example:
+            - super
+            - vip
+          state:
+            type: string
+            enum:
+            - active
+            - deleted
+            example: active
+          status:
+            type: string
+            enum:
+            - active
+            - inactive
+            - lead
+            example: active
+          created:
+            type: string
+            format: date-time
+            example: '2023-05-21T17:32:28+00:00'
+            description: Created date in ISO 8601.
+          updated:
+            type: string
+            format: date-time
+            description: Updated date in ISO 8601.
+            example: '2023-05-21T17:32:28+00:00'
+      - type: object
+        properties:
+          locations:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/Location'
+          contacts:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/Contact'
+    User:
+      type: object
+      description: A user account within the GorillaDesk company.
+      properties:
+        id:
+          description: User ID.
+          type: string
+          example: 0nk8PGvAO
+        username:
+          description: Login username.
+          type: string
+          example: johndoe
+        first_name:
+          description: First name.
+          type: string
+          example: John
+        last_name:
+          description: Last name.
+          type: string
+          example: Doe
+        role:
+          description: User role.
+          type: string
+          enum:
+          - super_admin
+          - admin
+          - technician
+          example: super_admin
+        license:
+          description: License number.
+          type: string
+          example: '#91161'
+        email:
+          description: User email address.
+          type: string
+          example: example@gmail.com
+        avatar_url:
+          type: string
+          description: URL of the user avatar.
+          example: https://d2e627ktfmb6xb.cloudfront.net/avatars/static/avatar_1.jpg
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+x-sidebar-links:
+- label: Model Context Protocol (MCP)
+  url: https://api.gorilladesk.com/mcp/v1/docs
+  target: _blank

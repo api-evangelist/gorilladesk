@@ -1,0 +1,388 @@
+openapi: 3.2.0
+info:
+  title: GorillaDesk Documents API
+  version: 1.0.0
+  description: '# Introduction
+
+    The GorillaDesk API is organized around REST.
+
+
+    Our API has predictable resource-oriented URLs, accepts JSON-encoded and form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs..
+
+
+    # Authentication
+
+
+    The GorillaDesk API uses Token authentication. API keys are per-company and can be generated and deleted in the Addons page.
+
+
+    # Rate Limits
+
+
+    We enforce API call rate limits to protect our infrastructure from excessive request rates, to keep GorillaDesk fast and stable for everyone. These limits are high enough that typical API workflows aren''t affected. However, please do code your integration to follow the rule below:
+
+
+    **If you receive a response status code of 429 (Too Many Requests), please sleep/pause for the number of seconds specified by the rate_reset value before making additional requests to that endpoint.**
+
+
+    Rate limits are enforced per endpoint group. Endpoint groups are used to provide more granular control by grouping endpoint URL paths and methods (e.g. GET, PUT, etc.) together. For instance, GETs to /v1/users/ and POSTs/PUTs to /v1/customers/ may be counted as two different API groups. This allows us to offer a higher limit on lightweight requests than we would be able to on more resource intensive request types.
+
+
+    API responses will have the following headers to provide rate limiting statistics about the limit it''s closest to hitting.
+
+
+    - `x-rate-limit-limit`: Request limit enforced for this endpoint, some endpoints may allow bursting over this limit
+
+    - `x-rate-limit-remaining`: Requests left in the enforcement window
+
+    - `x-rate-limit-reset`: Seconds remaining before this enforcement window ends (as a decimal).
+
+
+    # Model Context Protocol (MCP)
+
+
+    You can connect AI agents and tools to GorillaDesk via the Model Context Protocol. See the GorillaDesk MCP documentation.'
+  x-logo:
+    url: https://cdn.gorilladesk.com/assets/images/gorilladesk.png
+    altText: GorillaDesk logo
+servers:
+- url: https://api.gorilladesk.com/v1
+security:
+- Bearer: []
+tags:
+- name: Documents
+paths:
+  /documents:
+    get:
+      summary: List documents
+      tags:
+      - Documents
+      parameters:
+      - in: query
+        name: customer_id
+        description: Filter to documents for one customer.
+        schema:
+          type: string
+      - in: query
+        name: state
+        description: Filter by lifecycle state. Default returns only active.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - active
+            - deleted
+        example: active,deleted
+      - in: query
+        name: job_id
+        description: Filter to documents for one job.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - draft
+            - emailed
+            - pending_sig
+            - signed
+            - mailed
+        example: signed,emailed
+      - in: query
+        name: created[gt]
+        description: Return results where the document creation timestamp is strictly greater than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2025-09-01T00:00:00+00:00'
+      - in: query
+        name: created[gte]
+        description: Return results where the document creation timestamp is greater than or equal to this value.
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created[lt]
+        description: Return results where the document creation timestamp is strictly less than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2025-09-30T23:59:59+00:00'
+      - in: query
+        name: created[lte]
+        description: Return results where the document creation timestamp is less than or equal to this value.
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: keyword
+        description: Free-text search across the document name.
+        schema:
+          type: string
+      - in: query
+        name: include
+        description: Expand related objects. Default returns scalar fields only.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - customer
+        example: customer
+      - in: query
+        name: sort
+        description: Prefix -[field] for descending order.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - date
+            - created
+        example: -date
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Document'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+      operationId: getDocuments
+      x-operation-id-source: derived
+  /documents/{documentId}:
+    get:
+      summary: Retrieve a document
+      tags:
+      - Documents
+      parameters:
+      - in: path
+        name: documentId
+        description: Document id.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: include
+        description: Expand related objects.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - customer
+        example: customer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Document'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+      operationId: getDocumentsByDocumentId
+      x-operation-id-source: derived
+components:
+  schemas:
+    CustomerPhone:
+      type: object
+      required:
+      - phone
+      - type
+      properties:
+        id:
+          type: string
+          description: Phone Id
+          example: 0nk8PGvAO
+        phone:
+          type: string
+          example: 212-456-7890
+          description: Phone number
+        type:
+          type: string
+          description: Phone type Id
+          example: 0nk8PGvAO
+    Customer:
+      allOf:
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The customer ID.
+            example: 0nk8PGvAO
+          account_number:
+            type: string
+            description: Numeric account identifier for the customer.
+            example: '5047'
+          last_name:
+            type: string
+            example: Doe
+          first_name:
+            type: string
+            example: John
+          profile_url:
+            type: string
+            example: https://v3.gorilladesk.com/customers/5393
+          email:
+            type: string
+            example: example@gmail.com
+          phones:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/CustomerPhone'
+          company:
+            type: string
+            example: NL software
+          source:
+            type:
+            - object
+            - 'null'
+            description: Where the customer originated. Null if no source is assigned.
+            properties:
+              id:
+                type: string
+                description: Source ID.
+                example: aWGl2VlY78
+              name:
+                type: string
+                example: Facebook
+          tags:
+            type: array
+            description: Customer-level tag labels attached to this customer.
+            items:
+              type: string
+            example:
+            - super
+            - vip
+          state:
+            type: string
+            enum:
+            - active
+            - deleted
+            example: active
+          status:
+            type: string
+            enum:
+            - active
+            - inactive
+            - lead
+            example: active
+          created:
+            type: string
+            format: date-time
+            example: '2023-05-21T17:32:28+00:00'
+            description: Created date in ISO 8601.
+          updated:
+            type: string
+            format: date-time
+            description: Updated date in ISO 8601.
+            example: '2023-05-21T17:32:28+00:00'
+      - type: object
+        properties:
+          locations:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/Location'
+          contacts:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/Contact'
+    Document:
+      type: object
+      description: 'A document (e.g. signed agreement). Returned from both list
+
+        (`/v1/documents`) and detail (`/v1/documents/{id}`) endpoints.
+
+        '
+      properties:
+        id:
+          type: string
+          description: Document ID.
+          example: Dm2k8L
+        number:
+          type: string
+          description: Human-readable document number.
+          example: '5002'
+        type:
+          type: string
+          description: Document type.
+          example: PC Agreement (Signature)
+        status:
+          type: string
+          enum:
+          - draft
+          - emailed
+          - pending_sig
+          - signed
+          - mailed
+          description: Document workflow status.
+          example: signed
+        created:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Created date of the document in ISO 8601.
+          example: '2025-09-09T18:24:00+00:00'
+        updated:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Last-updated timestamp of the document in ISO 8601.
+          example: '2025-09-09T18:24:00+00:00'
+        state:
+          type: string
+          enum:
+          - active
+          - deleted
+          description: Lifecycle state of the document.
+          example: active
+        customer:
+          $ref: '#/components/schemas/Customer/allOf/0'
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+x-sidebar-links:
+- label: Model Context Protocol (MCP)
+  url: https://api.gorilladesk.com/mcp/v1/docs
+  target: _blank

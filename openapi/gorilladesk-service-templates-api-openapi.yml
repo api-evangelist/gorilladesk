@@ -1,0 +1,174 @@
+openapi: 3.2.0
+info:
+  title: GorillaDesk Service Templates API
+  version: 1.0.0
+  description: '# Introduction
+
+    The GorillaDesk API is organized around REST.
+
+
+    Our API has predictable resource-oriented URLs, accepts JSON-encoded and form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs..
+
+
+    # Authentication
+
+
+    The GorillaDesk API uses Token authentication. API keys are per-company and can be generated and deleted in the Addons page.
+
+
+    # Rate Limits
+
+
+    We enforce API call rate limits to protect our infrastructure from excessive request rates, to keep GorillaDesk fast and stable for everyone. These limits are high enough that typical API workflows aren''t affected. However, please do code your integration to follow the rule below:
+
+
+    **If you receive a response status code of 429 (Too Many Requests), please sleep/pause for the number of seconds specified by the rate_reset value before making additional requests to that endpoint.**
+
+
+    Rate limits are enforced per endpoint group. Endpoint groups are used to provide more granular control by grouping endpoint URL paths and methods (e.g. GET, PUT, etc.) together. For instance, GETs to /v1/users/ and POSTs/PUTs to /v1/customers/ may be counted as two different API groups. This allows us to offer a higher limit on lightweight requests than we would be able to on more resource intensive request types.
+
+
+    API responses will have the following headers to provide rate limiting statistics about the limit it''s closest to hitting.
+
+
+    - `x-rate-limit-limit`: Request limit enforced for this endpoint, some endpoints may allow bursting over this limit
+
+    - `x-rate-limit-remaining`: Requests left in the enforcement window
+
+    - `x-rate-limit-reset`: Seconds remaining before this enforcement window ends (as a decimal).
+
+
+    # Model Context Protocol (MCP)
+
+
+    You can connect AI agents and tools to GorillaDesk via the Model Context Protocol. See the GorillaDesk MCP documentation.'
+  x-logo:
+    url: https://cdn.gorilladesk.com/assets/images/gorilladesk.png
+    altText: GorillaDesk logo
+servers:
+- url: https://api.gorilladesk.com/v1
+security:
+- Bearer: []
+tags:
+- name: Service Templates
+paths:
+  /services:
+    get:
+      summary: List service templates
+      tags:
+      - Service Templates
+      parameters:
+      - in: query
+        name: sort
+        description: 'Comma-separated sort fields. Supported fields: `name`, `length`.
+
+          Prefix with `-` for descending order (e.g. `-length`, `name,-length`).
+
+          '
+        schema:
+          type: string
+        example: name,-length
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+      operationId: getServices
+      x-operation-id-source: derived
+  /services/{serviceId}:
+    get:
+      summary: Retrieve a service template
+      tags:
+      - Service Templates
+      parameters:
+      - in: path
+        name: serviceId
+        description: Service template id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Service'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+      operationId: getServicesByServiceId
+      x-operation-id-source: derived
+components:
+  schemas:
+    Service:
+      type: object
+      description: A service template (e.g. "Monthly Service") that can be booked as a job.
+      properties:
+        id:
+          type: string
+          description: Service ID.
+          example: Lk3mP9q
+        name:
+          type:
+          - string
+          - 'null'
+          example: Monthly Service
+        length:
+          type:
+          - integer
+          - 'null'
+          description: Duration in minutes.
+          example: 30
+        is_always_confirmed:
+          type:
+          - boolean
+          - 'null'
+          description: True if jobs from this service do not need customer confirmation.
+          example: false
+        recurrence_summary:
+          type:
+          - string
+          - 'null'
+          description: Human-readable recurrence summary. Non-null when the service repeats.
+          example: Recurring
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+x-sidebar-links:
+- label: Model Context Protocol (MCP)
+  url: https://api.gorilladesk.com/mcp/v1/docs
+  target: _blank

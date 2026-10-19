@@ -1,6 +1,7 @@
 openapi: 3.0.3
 info:
   title: GorillaDesk API
+  version: 1.0.0
   description: |
     # Introduction
     The GorillaDesk API is organized around REST.
@@ -25,6 +26,10 @@ info:
     - `x-rate-limit-limit`: Request limit enforced for this endpoint, some endpoints may allow bursting over this limit
     - `x-rate-limit-remaining`: Requests left in the enforcement window
     - `x-rate-limit-reset`: Seconds remaining before this enforcement window ends (as a decimal).
+
+    # Model Context Protocol (MCP)
+
+    You can connect AI agents and tools to GorillaDesk via the Model Context Protocol. See the [GorillaDesk MCP](https://api.gorilladesk.com/mcp/v1/docs) documentation.
   x-logo:
     url: 'https://cdn.gorilladesk.com/assets/images/gorilladesk.png'
     altText: GorillaDesk logo
@@ -32,63 +37,106 @@ servers:
   - url: 'https://api.gorilladesk.com/v1'
 security:
   - Bearer: []
+tags:
+  - name: Users
+  - name: Company
+  - name: Customers
+  - name: Jobs
+  - name: Notes
+  - name: Invoices
+  - name: Recurring Invoices
+  - name: Estimates
+  - name: Payments
+  - name: Credits
+  - name: Documents
+  - name: Branches
+  - name: Schedules
+  - name: Service Templates
+  - name: Phone Types
+  - name: Taxes
+  - name: Sources
+  - name: Line Items
+  - name: Payment Methods
+x-sidebar-links:
+  - label: Model Context Protocol (MCP)
+    url: 'https://api.gorilladesk.com/mcp/v1/docs'
+    target: _blank
 components:
   schemas:
     Company:
       type: object
+      description: Company profile information.
       properties:
         name:
+          description: Company name.
           type: string
           example: Pest Control
         email:
+          description: Company email address.
           type: string
           example: pestcontrol@gmail.com
         phone:
+          description: Company phone number.
           type: string
           example: (+1)202-555-0156
         website:
+          description: Company website URL.
           type: string
           example: pestcontrol.com
         address:
+          description: Company street address.
           type: string
           example: 12 Norman Stretton Road
         city:
+          description: City.
           type: string
           example: Deridder
         state:
+          description: State or province.
           type: string
           example: LA
         zip:
+          description: Postal / ZIP code.
           type: string
           example: '30634'
         timezone:
+          description: IANA timezone identifier.
           type: string
           example: America/Los_Angeles
         office_hours:
+          description: Company office hours.
           type: object
           properties:
             start:
+              description: 'Office opening time (HH:MM:SS).'
               type: string
               example: '07:00:00'
             end:
+              description: 'Office closing time (HH:MM:SS).'
               type: string
               example: '18:00:00'
     User:
       type: object
+      description: A user account within the GorillaDesk company.
       properties:
         id:
+          description: User ID.
           type: string
           example: 0nk8PGvAO
         username:
+          description: Login username.
           type: string
           example: johndoe
         first_name:
+          description: First name.
           type: string
           example: John
         last_name:
+          description: Last name.
           type: string
           example: Doe
         role:
+          description: User role.
           type: string
           enum:
             - super_admin
@@ -96,98 +144,104 @@ components:
             - technician
           example: super_admin
         license:
+          description: License number.
           type: string
           example: '#91161'
         email:
+          description: User email address.
           type: string
           example: example@gmail.com
-        avatar:
+        avatar_url:
           type: string
+          description: URL of the user avatar.
           example: 'https://d2e627ktfmb6xb.cloudfront.net/avatars/static/avatar_1.jpg'
     Customer:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The customer Id
-          example: 0nk8PGvAO
-        account_number:
-          type: string
-          description: Must end with a number
-          example: '5047'
-        last_name:
-          type: string
-          example: Doe
-        first_name:
-          type: string
-          example: John
-        profile_url:
-          type: string
-          example: 'https://v3.gorilladesk.com/customers/5393'
-        email:
-          type: string
-          example: example@gmail.com
-        phones:
-          type: array
-          items:
-            type: object
-            $ref: '#/components/schemas/CustomerPhone'
-        company:
-          type: string
-          example: NL software
-        source:
-          nullable: true
-          type: object
-          description: Where the customer originated. Null if no source is assigned.
+      allOf:
+        - type: object
           properties:
             id:
               type: string
-              description: Source id.
-              example: aWGl2VlY78
-            name:
+              description: The customer ID.
+              example: 0nk8PGvAO
+            account_number:
               type: string
-              example: Facebook
-        tags:
-          type: array
-          description: Customer-level tag labels attached to this customer.
-          items:
-            type: string
-          example:
-            - super
-            - vip
-        state:
-          type: string
-          enum:
-            - active
-            - deleted
-          example: active
-        status:
-          type: string
-          enum:
-            - active
-            - inactive
-            - lead
-          example: active
-        created:
-          type: string
-          format: date-time
-          example: '2023-05-21T17:32:28+00:00'
-          description: Created date in ISO format
-        updated:
-          type: string
-          format: date-time
-          description: Updated date in ISO format
-          example: '2023-05-21T17:32:28+00:00'
-        locations:
-          type: array
-          items:
-            type: object
-            $ref: '#/components/schemas/Location'
-        contacts:
-          type: array
-          items:
-            type: object
-            $ref: '#/components/schemas/Contact'
+              description: Numeric account identifier for the customer.
+              example: '5047'
+            last_name:
+              type: string
+              example: Doe
+            first_name:
+              type: string
+              example: John
+            profile_url:
+              type: string
+              example: 'https://v3.gorilladesk.com/customers/5393'
+            email:
+              type: string
+              example: example@gmail.com
+            phones:
+              type: array
+              items:
+                type: object
+                $ref: '#/components/schemas/CustomerPhone'
+            company:
+              type: string
+              example: NL software
+            source:
+              nullable: true
+              type: object
+              description: Where the customer originated. Null if no source is assigned.
+              properties:
+                id:
+                  type: string
+                  description: Source ID.
+                  example: aWGl2VlY78
+                name:
+                  type: string
+                  example: Facebook
+            tags:
+              type: array
+              description: Customer-level tag labels attached to this customer.
+              items:
+                type: string
+              example:
+                - super
+                - vip
+            state:
+              type: string
+              enum:
+                - active
+                - deleted
+              example: active
+            status:
+              type: string
+              enum:
+                - active
+                - inactive
+                - lead
+              example: active
+            created:
+              type: string
+              format: date-time
+              example: '2023-05-21T17:32:28+00:00'
+              description: Created date in ISO 8601.
+            updated:
+              type: string
+              format: date-time
+              description: Updated date in ISO 8601.
+              example: '2023-05-21T17:32:28+00:00'
+        - type: object
+          properties:
+            locations:
+              type: array
+              items:
+                type: object
+                $ref: '#/components/schemas/Location'
+            contacts:
+              type: array
+              items:
+                type: object
+                $ref: '#/components/schemas/Contact'
     CustomerPhone:
       type: object
       required:
@@ -208,6 +262,7 @@ components:
           example: 0nk8PGvAO
     Location:
       type: object
+      description: A physical location associated with a customer.
       required:
         - address_line_1
         - city
@@ -215,58 +270,76 @@ components:
         - zip
       properties:
         id:
+          description: Location ID.
           type: string
           example: 5aXrGzNyLY
           readOnly: true
         name:
+          description: 'Location name (e.g. Home, Office).'
           type: string
           example: Home
         address_to:
+          description: Attention line for this address.
           type: string
           example: John Doe
         address_line_1:
+          description: Primary street address.
           type: string
           example: 523 East 72nd Street
         address_line_2:
+          description: 'Secondary street address (apartment, suite, etc.).'
           type: string
           example: ''
         city:
+          description: City.
           type: string
           example: New York
         state:
+          description: State or province.
           type: string
           example: NY
         zip:
+          description: Postal / ZIP code.
           type: string
           example: '10021'
         county:
+          description: County.
           type: string
           example: ''
         billing_to:
+          description: Attention line for billing address.
           type: string
           example: John Doe
         billing_address_line_1:
+          description: Billing street address.
           type: string
           example: 523 East 72nd Street
         billing_address_line_2:
+          description: Billing secondary address.
           type: string
           example: ''
         billing_city:
+          description: Billing city.
           type: string
           example: New York
         billing_state:
+          description: Billing state.
           type: string
           example: NY
         billing_zip:
+          description: Billing postal code.
           type: string
           example: '10021'
         latitude:
+          description: Latitude coordinate.
           type: string
           example: ''
         longitude:
+          description: Longitude coordinate.
           type: string
           example: ''
         note:
+          description: Location notes.
           type: string
           example: 'Lorem ipsum dolor sit amet, consectetuer adipiscing eliti'
     Contact:
@@ -307,6 +380,1139 @@ components:
             - active
             - deleted
           example: active
+    LineItem:
+      type: object
+      description: A line item from the company's catalogue.
+      properties:
+        id:
+          type: string
+          description: The line item Id
+          example: 0nk8PGvAO
+        name:
+          type: string
+          example: Service Call
+        cost:
+          type: number
+          format: float
+          description: Unit cost. Null if not set.
+          nullable: true
+          example: 99.99
+        tax1:
+          nullable: true
+          description: 'First assigned tax, or null if none.'
+          type: object
+          properties:
+            id:
+              type: string
+              example: 5aXrGzNyLY
+            name:
+              type: string
+              example: GST
+        tax2:
+          nullable: true
+          description: 'Second assigned tax, or null if none.'
+          type: object
+          properties:
+            id:
+              type: string
+              example: MqbgNm4oXE
+            name:
+              type: string
+              example: City Tax
+    Service:
+      type: object
+      description: A service template (e.g. "Monthly Service") that can be booked as a job.
+      properties:
+        id:
+          type: string
+          description: Service ID.
+          example: Lk3mP9q
+        name:
+          type: string
+          nullable: true
+          example: Monthly Service
+        length:
+          type: integer
+          nullable: true
+          description: Duration in minutes.
+          example: 30
+        is_always_confirmed:
+          type: boolean
+          nullable: true
+          description: True if jobs from this service do not need customer confirmation.
+          example: false
+        recurrence_summary:
+          type: string
+          nullable: true
+          description: Human-readable recurrence summary. Non-null when the service repeats.
+          example: Recurring
+    Schedule:
+      type: object
+      description: A schedule assigned to the company.
+      properties:
+        id:
+          type: string
+          example: 0nk8PGvAO
+        name:
+          type: string
+          example: Tech 1
+        nickname:
+          type: string
+          example: Residential route
+        user:
+          nullable: true
+          $ref: '#/components/schemas/User'
+    Job:
+      type: object
+      description: |
+        A job. Returned from both list (`/v1/jobs`) and detail (`/v1/jobs/{id}`).
+
+        Scalar fields are always present. Nested objects (`customer`, `location`,
+        `schedules`) populate only when requested via the `include` query parameter.
+      properties:
+        id:
+          type: string
+          description: Job ID.
+          example: 8gK9p2L
+        work_order_number:
+          type: string
+          nullable: true
+          description: Auto-generated work order reference.
+          example: WO-1042
+        name:
+          type: string
+          nullable: true
+          example: Monthly Service
+        date:
+          type: string
+          format: date-time
+          description: Scheduled start datetime in ISO 8601 with timezone.
+          example: '2026-04-23T09:00:00+00:00'
+        status:
+          type: object
+          description: Job workflow status.
+          properties:
+            id:
+              type: string
+              example: St3kP9q
+            label:
+              type: string
+              example: Pending Booking
+        state:
+          type: string
+          enum:
+            - active
+            - deleted
+          description: Lifecycle state.
+          example: active
+        in_work_pool:
+          type: boolean
+          description: True when the job is in the workpool (no assignee yet).
+          example: false
+        is_always_confirmed:
+          type: boolean
+          nullable: true
+          description: True when the service template is always confirmed.
+          example: false
+        length:
+          type: integer
+          nullable: true
+          description: Scheduled duration in minutes.
+          example: 60
+        check_in_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: Actual check-in timestamp. Null when the technician has not started the job.
+          example: '2026-04-23T09:02:00+00:00'
+        check_out_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: Actual check-out timestamp. Null when the technician has not finished.
+          example: '2026-04-23T10:05:00+00:00'
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          description: Created date of the job in ISO 8601.
+          example: '2026-04-23T09:00:00+00:00'
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last-updated timestamp of the job in ISO 8601.
+          example: '2026-04-23T10:05:00+00:00'
+        recurrence_summary:
+          type: string
+          nullable: true
+          description: Human-readable recurrence summary. Non-null when part of a recurring series.
+          example: 'Monthly on the 6th, until 07/09/2026. Except January, April, September'
+        customer:
+          $ref: '#/components/schemas/Customer/allOf/0'
+        location:
+          $ref: '#/components/schemas/Location'
+        schedules:
+          type: array
+          description: Schedules assigned to the job.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: U7vR2lP
+              name:
+                type: string
+                example: Schedule 1
+              user:
+                nullable: true
+                $ref: '#/components/schemas/User'
+                description: The technician assigned via this schedule.
+    JobSummary:
+      type: object
+      description: |
+        Lightweight `Job` reference used by other resources (`Invoice`,
+        `Estimate`, `Commission`). Contains only scalar fields — no nested
+        `customer`, `location`, or `schedules`. The parent resource already
+        carries `customer` and `location`; partners needing the full `Job`
+        should call `/v1/jobs/{id}`.
+      properties:
+        id:
+          type: string
+          description: Job ID.
+          example: Jo8vXk3
+        name:
+          type: string
+          nullable: true
+          description: Job name.
+          example: PC Service — Monthly
+        service_name:
+          type: string
+          nullable: true
+          description: Service catalogue name attached to the job.
+          example: $ 5-12 (check 2)
+        status:
+          type: string
+          nullable: true
+          description: Job workflow label (mapped from the internal integer status).
+          example: Scheduled
+        date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Scheduled job date in ISO 8601 with timezone.
+          example: '2026-07-22T00:00:00+00:00'
+    JobActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Activity ID.
+          example: 8gK9p2L
+        message:
+          type: string
+          description: Human-readable message describing the activity.
+          example: Job confirmed
+        date:
+          type: string
+          format: date-time
+          description: 'When the activity occurred, in ISO 8601 with timezone.'
+          example: '2026-03-01T10:00:00+00:00'
+    Material:
+      type: object
+      description: A material.
+      properties:
+        id:
+          type: string
+          description: Material ID.
+          example: x1eW6yGmMA
+        name:
+          type: string
+          description: Material name.
+          example: Chemical X
+          nullable: true
+        units:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unit ID.
+                example: aBcD123
+              name:
+                type: string
+                description: Unit name.
+                example: Gallons
+              quantity:
+                type: number
+                format: float
+                description: Unit quantity.
+                example: 2.5
+          description: Material units.
+          nullable: true
+        dilution:
+          type: string
+          description: Dilution ratio.
+          example: '1:10'
+          nullable: true
+        method:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Method ID.
+                example: xYz987
+              name:
+                type: string
+                description: Method name.
+                example: Spray
+          description: Application methods.
+          nullable: true
+        custom:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Custom attribute ID.
+                example: gHj789
+              name:
+                type: string
+                description: Custom attribute name.
+                example: Extra strength
+          description: Custom material properties.
+          nullable: true
+        locations:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Location ID.
+                example: rSt012
+              name:
+                type: string
+                description: Location name.
+                example: Front Yard
+          description: Locations where the material was applied.
+        targets:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Target ID.
+                example: pQr456
+              name:
+                type: string
+                description: Target name.
+                example: Ants
+          description: Targeted pests or items.
+        area:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Area ID.
+                example: kLm456
+              name:
+                type: string
+                description: Area name.
+                example: Backyard
+              quantity:
+                type: number
+                format: float
+                description: Treated area quantity.
+                example: 100.5
+          description: Treated areas.
+          nullable: true
+    Device:
+      type: object
+      description: A device installed at a job site.
+      properties:
+        id:
+          type: string
+          description: Device id.
+          example: D8mN3pQ
+        name:
+          type: string
+          description: Device name.
+          example: Bait Station A1
+          nullable: true
+        barcode:
+          type: string
+          description: Device barcode.
+          example: BC-123456
+          nullable: true
+        check_in:
+          type: string
+          description: 'Check-in time recorded by the technician, as a 24-hour `HH:MM:SS` string. Times recorded as a Unix timestamp are converted to the company timezone. `null` when no check-in was recorded.'
+          pattern: '^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$'
+          example: '07:00:00'
+          nullable: true
+        check_out:
+          type: string
+          description: 'Check-out time recorded by the technician, as a 24-hour `HH:MM:SS` string. Same conversion rules as `check_in`. `null` when no check-out was recorded.'
+          pattern: '^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$'
+          example: '08:00:00'
+          nullable: true
+        type:
+          type: object
+          description: Device type.
+          nullable: true
+          properties:
+            id:
+              type: string
+              description: Type ID.
+              example: tYp123
+            name:
+              type: string
+              description: Type name.
+              example: Bait Station
+        status:
+          type: object
+          description: Device status.
+          nullable: true
+          properties:
+            id:
+              type: string
+              description: Status ID.
+              example: sTa456
+            name:
+              type: string
+              description: Status name.
+              example: Active
+        area:
+          type: object
+          description: Area where the device is located.
+          nullable: true
+          properties:
+            id:
+              type: string
+              description: Area ID.
+              example: aRe789
+            name:
+              type: string
+              description: Area name.
+              example: Backyard
+        level:
+          type: object
+          description: Device level.
+          nullable: true
+          properties:
+            id:
+              type: string
+              description: Level ID.
+              example: lEv012
+            name:
+              type: string
+              description: Level name.
+              example: Ground
+    Invoice:
+      type: object
+      description: |
+        An invoice. Returned from both list (`/v1/invoices`) and detail
+        (`/v1/invoices/{id}`) endpoints. Nested objects may be `null` or
+        empty arrays when not applicable.
+      allOf:
+        - $ref: '#/components/schemas/BaseInvoice'
+        - type: object
+          properties:
+            customer:
+              $ref: '#/components/schemas/Customer/allOf/0'
+            location:
+              $ref: '#/components/schemas/Location'
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/InvoiceItem'
+    BaseInvoice:
+      type: object
+      description: Scalar invoice fields that are always returned.
+      properties:
+        id:
+          type: string
+          description: Invoice ID.
+          example: Wj2k8L
+        number:
+          type: string
+          description: Human-readable invoice number.
+          example: '5308'
+        status:
+          type: string
+          enum:
+            - draft
+            - sent
+            - paid
+            - partial
+            - paid_partially
+            - write_off
+            - failed
+            - void
+          description: Payment workflow status.
+          example: draft
+        sign_status:
+          type: string
+          enum:
+            - draft
+            - emailed
+            - pending_sig
+            - signed
+          description: Customer-signature workflow status.
+          example: draft
+        date:
+          type: string
+          format: date-time
+          description: Invoice date in ISO 8601.
+          example: '2026-07-22T00:00:00+00:00'
+        total:
+          type: number
+          format: float
+          description: Grand total (including tax).
+          example: 38.5
+        subtotal:
+          type: number
+          format: float
+          description: Line-item subtotal before invoice-level adjustments.
+          example: 35
+        amount_without_tax:
+          type: number
+          format: float
+          nullable: true
+          description: Total before tax.
+          example: 35
+        tax_amount:
+          type: number
+          format: float
+          nullable: true
+          description: Total tax charged. Derived as `total - amount_without_tax`.
+          example: 3.5
+        amount_paid:
+          type: number
+          format: float
+          description: Sum of payments applied to the invoice.
+          example: 0
+        amount_due:
+          type: number
+          format: float
+          description: Outstanding balance.
+          example: 38.5
+        recurrence_summary:
+          type: string
+          nullable: true
+          description: Human-readable recurrence summary.
+          example: 'Monthly on the 6th, until 07/09/2026. Except January, April, September'
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          description: Created date of the invoice in ISO 8601.
+          example: '2026-07-22T00:00:00+00:00'
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last-updated timestamp of the invoice in ISO 8601.
+          example: '2026-07-22T00:00:00+00:00'
+        state:
+          type: string
+          enum:
+            - active
+            - deleted
+            - archived
+          description: Lifecycle state of the invoice.
+          example: active
+    InvoiceItem:
+      type: object
+      description: A single line item on an invoice.
+      properties:
+        id:
+          type: string
+          example: Lm4kP9q
+        name:
+          type: string
+          example: Monthly Service
+        quantity:
+          type: number
+          example: 1
+        cost:
+          type: number
+          format: float
+          example: 35
+        total:
+          type: number
+          format: float
+          example: 35
+        taxes:
+          type: array
+          nullable: true
+          description: Taxes applied to this line item.
+          items:
+            $ref: '#/components/schemas/Tax'
+    RecurringInvoice:
+      type: object
+      description: |
+        A recurring invoice — the schedule that generates invoices for a job.
+        Returned from both list (`/v1/recurring-invoices`) and detail
+        (`/v1/recurring-invoices/{id}`) endpoints.
+      properties:
+        id:
+          type: string
+          description: Recurring invoice ID.
+          example: Rv7nQ4pW2k
+        job:
+          type: object
+          nullable: true
+          description: The job this recurrence bills for. Null when the recurrence is not attached to a job.
+          properties:
+            name:
+              type: string
+              nullable: true
+              description: Job name.
+              example: Monthly Service
+        recurrence_summary:
+          type: string
+          nullable: true
+          description: |
+            Human-readable recurrence summary: the repeat rule, followed by any
+            exceptions (e.g. Every 2 days, 3 times. Except Jan, Feb).
+          example: 'Every month on the 1st Tuesday, 4 times. Except January, April, September'
+        total:
+          type: number
+          format: float
+          nullable: true
+          description: Amount billed on each occurrence.
+          example: 149.5
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          description: |
+            Date the recurrence started, in ISO 8601 (UTC). Filter on it with
+            `created[gt]` / `created[gte]` / `created[lt]` / `created[lte]`.
+          example: '2026-07-22T00:00:00+00:00'
+        customer:
+          description: Customer the recurrence bills. Only returned with `?include=customer`.
+          $ref: '#/components/schemas/Customer/allOf/0'
+    Estimate:
+      type: object
+      description: |
+        An estimate. Returned from both list (`/v1/estimates`) and detail
+        (`/v1/estimates/{id}`) endpoints. Nested objects may be `null` or
+        empty arrays when not applicable.
+      properties:
+        id:
+          type: string
+          description: Estimate ID.
+          example: Em2k8P
+        number:
+          type: string
+          description: Human-readable estimate number.
+          example: '5012'
+        status:
+          type: string
+          enum:
+            - draft
+            - pending
+            - won
+            - lost
+          description: Workflow status.
+          example: won
+        sign_status:
+          type: string
+          enum:
+            - draft
+            - emailed
+            - pending_sig
+            - signed
+          description: Customer-signature workflow status.
+          example: signed
+        date:
+          type: string
+          format: date-time
+          description: Estimate date in ISO 8601.
+          example: '2025-09-16T00:00:00+00:00'
+        total:
+          type: number
+          format: float
+          description: Grand total (including tax).
+          example: 112.5
+        subtotal:
+          type: number
+          format: float
+          description: Line-item subtotal before adjustments.
+          example: 125
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          description: Created date in ISO 8601.
+          example: '2025-09-16T00:00:00+00:00'
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last-updated timestamp of the estimate in ISO 8601.
+          example: '2025-09-16T00:00:00+00:00'
+        state:
+          type: string
+          enum:
+            - active
+            - deleted
+            - archived
+          description: Lifecycle state of the estimate.
+          example: active
+        customer:
+          $ref: '#/components/schemas/Customer/allOf/0'
+        location:
+          $ref: '#/components/schemas/Location'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstimateItem'
+    EstimateItem:
+      type: object
+      description: A single line item on an estimate.
+      properties:
+        id:
+          type: string
+          example: Lm4kP9q
+        name:
+          type: string
+          example: Bi-Monthly Service
+        quantity:
+          type: number
+          example: 1
+        cost:
+          type: number
+          format: float
+          example: 65
+        total:
+          type: number
+          format: float
+          example: 58.5
+        taxes:
+          type: array
+          nullable: true
+          description: Taxes applied to this line item.
+          items:
+            $ref: '#/components/schemas/Tax'
+    Payment:
+      type: object
+      description: A payment applied to an invoice.
+      properties:
+        id:
+          type: string
+          description: Payment ID.
+          example: Pm2k8L
+        date:
+          type: string
+          format: date-time
+          description: Payment date in ISO 8601.
+          example: '2026-03-19T00:00:00+00:00'
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last-updated timestamp of the payment in ISO 8601.
+          example: '2026-03-19T00:00:00+00:00'
+        status:
+          type: string
+          enum:
+            - failed
+            - pending
+            - paid
+          description: Status reported by the payment processor.
+          example: paid
+        gross_amount:
+          type: number
+          format: float
+          description: Total amount the customer was charged (amount + surcharge).
+          example: 59.98
+        applied_amount:
+          type: number
+          format: float
+          description: Amount that reduced the invoice balance.
+          example: 58
+        fee:
+          type: number
+          format: float
+          description: Processing fee deducted by the payment processor.
+          example: 2.04
+        surcharge:
+          type: number
+          format: float
+          description: Surcharge paid by the customer.
+          example: 1.98
+        payment_for:
+          type: string
+          enum:
+            - invoice
+            - credit
+          description: Indicates whether the payment is tied to an invoice or is a standalone credit.
+        method:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Stripe **** 1111
+            check_number:
+              type: string
+              nullable: true
+              example: '1042'
+            check_value:
+              type: number
+              format: float
+              nullable: true
+              description: Value of the check.
+              example: 58
+            memo:
+              type: string
+              nullable: true
+              description: Payment memo or note.
+              example: 'Payment for invoice #1234'
+        invoice:
+          $ref: '#/components/schemas/BaseInvoice'
+        customer:
+          $ref: '#/components/schemas/Customer/allOf/0'
+    Credit:
+      type: object
+      description: |
+        A credit transaction. Returned from both list (`/v1/credits`) and detail
+        (`/v1/credits/{id}`) endpoints. The `customer` object populates only
+        when requested via the `include` query parameter.
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Credit ID.
+              example: Pm2k8L
+            total:
+              type: number
+              format: float
+              description: Original credit value.
+              example: 100
+            available_credit:
+              type: number
+              format: float
+              description: Remaining credit balance.
+              example: 100
+            date:
+              type: string
+              format: date-time
+              nullable: true
+              description: Issue date of the credit.
+              example: '2026-03-19T00:00:00+00:00'
+            method:
+              type: object
+              nullable: true
+              description: Payment method details. `check_number` and `check_value` only present when `name` is `check`.
+              properties:
+                name:
+                  type: string
+                  example: Stripe **** 1111
+                check_number:
+                  type: string
+                  nullable: true
+                  example: '1042'
+                check_value:
+                  type: number
+                  format: float
+                  nullable: true
+                  example: 100
+                memo:
+                  type: string
+                  nullable: true
+                  example: Customer credit refund
+        - type: object
+          properties:
+            customer:
+              $ref: '#/components/schemas/Customer/allOf/0'
+    Document:
+      type: object
+      description: |
+        A document (e.g. signed agreement). Returned from both list
+        (`/v1/documents`) and detail (`/v1/documents/{id}`) endpoints.
+      properties:
+        id:
+          type: string
+          description: Document ID.
+          example: Dm2k8L
+        number:
+          type: string
+          description: Human-readable document number.
+          example: '5002'
+        type:
+          type: string
+          description: Document type.
+          example: PC Agreement (Signature)
+        status:
+          type: string
+          enum:
+            - draft
+            - emailed
+            - pending_sig
+            - signed
+            - mailed
+          description: Document workflow status.
+          example: signed
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          description: Created date of the document in ISO 8601.
+          example: '2025-09-09T18:24:00+00:00'
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last-updated timestamp of the document in ISO 8601.
+          example: '2025-09-09T18:24:00+00:00'
+        state:
+          type: string
+          enum:
+            - active
+            - deleted
+          description: Lifecycle state of the document.
+          example: active
+        customer:
+          $ref: '#/components/schemas/Customer/allOf/0'
+    Commission:
+      type: object
+      description: |
+        One row of the commission report. Nested objects are used only for real
+        entities (`staff`, `customer`, `invoice`, `job`); the rest of the fields
+        are flat scalars.
+      properties:
+        staff:
+          type: object
+          description: The staff member who earned the commission.
+          properties:
+            id:
+              type: string
+              description: Staff (user) id.
+              example: Us8mK3q
+            name:
+              type: string
+              description: Display name of the staff member.
+              example: Stripe NL
+        customer:
+          type: object
+          description: The customer the invoice belongs to.
+          properties:
+            id:
+              type: string
+              example: Cu5vXk3
+            account_number:
+              type: string
+              example: '5047'
+            first_name:
+              type: string
+              example: Anh
+            last_name:
+              type: string
+              example: Tran
+        invoice:
+          type: object
+          description: The invoice the commission line item belongs to.
+          properties:
+            id:
+              type: string
+              example: In8vXk3
+            number:
+              type: string
+              example: '4946'
+            date:
+              type: string
+              format: date-time
+              example: '2025-11-25T00:00:00+00:00'
+            status:
+              type: string
+              example: paid
+        job:
+          description: The job attached to the invoice. Lightweight `JobSummary`.
+          $ref: '#/components/schemas/JobSummary'
+        line_item_name:
+          type: string
+          description: Line-item name from the invoice.
+          example: invoice dọn dẹp nhà
+        item_value:
+          type: number
+          format: float
+          description: Line-item value the commission is computed on.
+          example: 104
+        payment_method:
+          type: string
+          description: Payment method used to settle the invoice.
+          example: stripe **** 9969
+        commission_type:
+          type: string
+          enum:
+            - $
+            - '%'
+          description: '`$` = flat amount · `%` = percentage rate.'
+          example: $
+        commission_rate:
+          type: number
+          format: float
+          description: Flat amount (when type is `$`) or percentage (when type is `%`).
+          example: 5
+        production_commission:
+          type: number
+          format: float
+          description: Commission earned on the production ledger.
+          example: 5
+        production_commission_excluding_tax:
+          type: number
+          format: float
+          description: Production commission excluding tax.
+          example: 5
+        split_commission:
+          type: number
+          format: float
+          description: Commission earned on the split ledger.
+          example: 5
+        split_commission_excluding_tax:
+          type: number
+          format: float
+          description: Split commission excluding tax.
+          example: 5
+    Tax:
+      type: object
+      description: A tax applied to a line item.
+      properties:
+        id:
+          type: string
+          example: '5'
+        name:
+          type: string
+          example: Sales Tax
+        rate:
+          type: number
+          format: float
+          example: 10
+    Note:
+      type: object
+      description: |
+        A text annotation attached to a job or customer.
+
+        Backend `Note.comments: Comment` sub-relation is dropped by default;
+        add via `?include=comments` when partners need the thread replies.
+      properties:
+        id:
+          type: string
+          description: Note id.
+          example: N7p3kQ
+        content:
+          type: string
+          description: Note body as authored.
+          example: Sprayed baseboards; found termites in kitchen wall
+        date:
+          type: string
+          format: date-time
+          description: When the note was written (ISO 8601 with timezone).
+          example: '2026-03-19T09:30:00+00:00'
+        created_by:
+          type: object
+          description: 'Summary of the author. Partners needing more fields should call `/v1/users/{id}`.'
+          properties:
+            id:
+              type: string
+              description: User id.
+              example: Us8mK3q
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+    PaymentMethod:
+      type: object
+      description: A payment method.
+      properties:
+        id:
+          type: string
+          description: Payment Method ID.
+          example: x1eW6yGmMA
+        name:
+          type: string
+          description: Name of the payment method.
+          example: Credit Card
+          nullable: true
+    Source:
+      type: object
+      description: 'A customer source — where a customer originated (e.g. "Website", "Referral").'
+      properties:
+        id:
+          type: string
+          description: The source Id
+          example: 0nk8PGvAO
+        name:
+          type: string
+          description: Display name of the source.
+          example: Google Ads
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Created date in ISO 8601 format with timezone offset.
+          example: '2026-05-15T03:16:33+00:00'
+    Branch:
+      type: object
+      description: A branch of the company.
+      properties:
+        id:
+          type: string
+          description: Branch ID.
+          example: 0nk8PGvAO
+        name:
+          type: string
+          description: Branch name.
+          nullable: true
+          example: NT Branch Company
+        email:
+          type: string
+          description: Branch email address.
+          nullable: true
+          example: branch@domain.com
+        phone:
+          type: string
+          description: 'Branch phone number, as entered.'
+          nullable: true
+          example: '12054090749'
+        employee_count:
+          type: integer
+          description: Number of employees in the branch.
+          nullable: true
+          example: 1
+        plan:
+          type: object
+          description: Subscription plan of the branch.
+          nullable: true
+          properties:
+            id:
+              type: string
+              description: Plan ID.
+              example: x1eW6yGmMA
+            type:
+              type: string
+              description: 'Name of the subscription plan the branch is on, as returned by GorillaDesk (e.g. `Growth 1`, `Growth 5`). Free-form text, not an enum. `null` when not set.'
+              nullable: true
+              example: Growth 1
+            period:
+              type: string
+              description: 'Billing period of the plan (e.g. `Month`). Free-form text, not an enum. `null` when not set.'
+              nullable: true
+              example: Month
   securitySchemes:
     Bearer:
       type: http
@@ -328,12 +1534,154 @@ paths:
                   data:
                     $ref: '#/components/schemas/Company'
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
+  /sources:
+    get:
+      operationId: listSources
+      summary: List all sources
+      tags:
+        - Sources
+      parameters:
+        - in: query
+          name: keyword
+          description: Search sources by name (case-insensitive partial match)
+          schema:
+            type: string
+            maxLength: 255
+          example: Google
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order. Default: name asc.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - name
+                - id
+                - created_at
+          example: 'name,-created_at'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Source'
+                  has_more:
+                    type: boolean
+        '400':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+  '/sources/{sourceId}':
+    get:
+      operationId: getSource
+      summary: Retrieve a source
+      tags:
+        - Sources
+      parameters:
+        - in: path
+          name: sourceId
+          description: Source Id
+          required: true
+          schema:
+            type: string
+          example: 0nk8PGvAO
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Source'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /branches:
+    get:
+      operationId: listBranches
+      summary: List all branches
+      tags:
+        - Branches
+      parameters:
+        - in: query
+          name: keyword
+          description: Search branches by name (case-insensitive partial match)
+          schema:
+            type: string
+            maxLength: 255
+          example: Downtown
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order. Default: name asc.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - name
+                - id
+                - employee_count
+          example: 'name,-employee_count'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Branch'
+                  has_more:
+                    type: boolean
+        '400':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
   /users:
     get:
       summary: List all users
       tags:
-        - User
+        - Users
       parameters:
         - in: query
           name: limit
@@ -362,27 +1710,14 @@ paths:
                   has_more:
                     type: boolean
         '401':
-          description: Unauthorized error
+          $ref: '#/paths/~1jobs/get/responses/401'
         '403':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - error
-                  - message
-                properties:
-                  error:
-                    type: object
-                    nullable: true
-                  message:
-                    type: string
+          $ref: '#/paths/~1jobs/get/responses/403'
   '/users/{userId}':
     get:
       summary: Retrieve a user
       tags:
-        - User
+        - Users
       parameters:
         - in: path
           name: userId
@@ -401,14 +1736,14 @@ paths:
                   data:
                     $ref: '#/components/schemas/User'
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
         '404':
-          description: Not Found
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
   /customers:
     get:
       summary: List all customers
       tags:
-        - Customer
+        - Customers
       parameters:
         - in: query
           name: state
@@ -544,13 +1879,13 @@ paths:
                   has_more:
                     type: boolean
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
         '403':
-          $ref: '#/paths/~1users/get/responses/403'
+          $ref: '#/paths/~1jobs/get/responses/403'
     post:
       summary: Create a customer
       tags:
-        - Customer
+        - Customers
       requestBody:
         content:
           application/json:
@@ -558,6 +1893,8 @@ paths:
               allOf:
                 - $ref: '#/paths/~1customers~1%7BcustomerId%7D/put/requestBody/content/application~1json/schema'
                 - type: object
+                  required:
+                    - location
                   properties:
                     location:
                       $ref: '#/components/schemas/Location'
@@ -576,14 +1913,14 @@ paths:
                       id:
                         type: string
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
         '403':
-          $ref: '#/paths/~1users/get/responses/403'
+          $ref: '#/paths/~1jobs/get/responses/403'
   '/customers/{customerId}':
     get:
       summary: Retrieve a customer
       tags:
-        - Customer
+        - Customers
       parameters:
         - in: path
           name: customerId
@@ -612,15 +1949,15 @@ paths:
                   data:
                     $ref: '#/components/schemas/Customer'
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
         '403':
-          $ref: '#/paths/~1users/get/responses/403'
+          $ref: '#/paths/~1jobs/get/responses/403'
         '404':
-          $ref: '#/paths/~1users~1%7BuserId%7D/get/responses/404'
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
     put:
       summary: Update a customer
       tags:
-        - Customer
+        - Customers
       parameters:
         - in: path
           name: customerId
@@ -629,14 +1966,12 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Create a new pet in the store
         content:
           application/json:
             schema:
               type: object
               required:
                 - first_name
-                - location
               properties:
                 account_number:
                   type: string
@@ -681,16 +2016,59 @@ paths:
                       id:
                         type: string
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
         '403':
-          $ref: '#/paths/~1users/get/responses/403'
+          $ref: '#/paths/~1jobs/get/responses/403'
         '404':
-          $ref: '#/paths/~1users~1%7BuserId%7D/get/responses/404'
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  '/customers/{customerId}/locations':
+    post:
+      operationId: addCustomerLocation
+      summary: Add a customer location
+      description: |
+        Add another location to an existing customer. The first location is sent in `location` when creating the customer.
+
+        The response carries the new location id only. Read the stored location — including the values filled in for the fields you omitted — with `GET /customers/{customerId}?include=locations`.
+      tags:
+        - Customers
+      parameters:
+        - in: path
+          name: customerId
+          description: Customer Id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        description: Id of the new location.
+                        type: string
+        '400':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
   /phone-types:
     get:
       summary: List all phone types
       tags:
-        - Phone Type
+        - Phone Types
       parameters:
         - in: query
           name: limit
@@ -719,18 +2097,18 @@ paths:
                   has_more:
                     type: boolean
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
         '403':
-          $ref: '#/paths/~1users/get/responses/403'
+          $ref: '#/paths/~1jobs/get/responses/403'
   '/customers/{customerId}/notes':
     post:
       summary: Create a customer note
       tags:
-        - Note
+        - Notes
       parameters:
         - in: path
           name: customerId
-          description: Customer Id
+          description: Customer id.
           required: true
           schema:
             type: string
@@ -776,8 +2154,1604 @@ paths:
                         type: string
                         example: 5aXrGzNyLY
         '401':
-          $ref: '#/paths/~1users/get/responses/401'
+          $ref: '#/paths/~1jobs/get/responses/401'
         '403':
-          $ref: '#/paths/~1users/get/responses/403'
+          $ref: '#/paths/~1jobs/get/responses/403'
         '404':
-          $ref: '#/paths/~1users~1%7BuserId%7D/get/responses/404'
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /taxes:
+    get:
+      operationId: listTaxes
+      summary: List all taxes
+      tags:
+        - Taxes
+      parameters:
+        - in: query
+          name: keyword
+          description: Search taxes by name (case-insensitive partial match)
+          schema:
+            type: string
+          example: GST
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order. Default: name asc.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - name
+                - rate
+                - id
+          example: 'name,-rate'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tax'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/taxes/{taxId}':
+    get:
+      operationId: getTax
+      summary: Retrieve a tax
+      tags:
+        - Taxes
+      parameters:
+        - in: path
+          name: taxId
+          description: Tax Id
+          required: true
+          schema:
+            type: string
+          example: 5aXrGzNyLY
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Tax'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /items:
+    get:
+      operationId: listLineItems
+      summary: List all line items
+      tags:
+        - Line Items
+      parameters:
+        - in: query
+          name: keyword
+          description: Search line items by name (case-insensitive partial match)
+          schema:
+            type: string
+            maxLength: 255
+          example: Service
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order. Default: name asc.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - name
+                - cost
+                - id
+          example: 'name,-cost'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LineItem'
+                  has_more:
+                    type: boolean
+        '400':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+  '/items/{lineItemId}':
+    get:
+      operationId: getLineItem
+      summary: Retrieve a line item
+      tags:
+        - Line Items
+      parameters:
+        - in: path
+          name: lineItemId
+          description: Line item Id
+          required: true
+          schema:
+            type: string
+          example: 5aXrGzNyLY
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LineItem'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /services:
+    get:
+      summary: List service templates
+      tags:
+        - Service Templates
+      parameters:
+        - in: query
+          name: sort
+          description: |
+            Comma-separated sort fields. Supported fields: `name`, `length`.
+            Prefix with `-` for descending order (e.g. `-length`, `name,-length`).
+          schema:
+            type: string
+          example: 'name,-length'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/services/{serviceId}':
+    get:
+      summary: Retrieve a service template
+      tags:
+        - Service Templates
+      parameters:
+        - in: path
+          name: serviceId
+          description: Service template id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Service'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /schedules:
+    get:
+      summary: List schedules
+      tags:
+        - Schedules
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Schedule'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/schedules/{scheduleId}':
+    get:
+      summary: Retrieve a schedule
+      tags:
+        - Schedules
+      parameters:
+        - in: path
+          name: scheduleId
+          description: Schedule id.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Schedule'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /jobs:
+    get:
+      summary: List jobs
+      tags:
+        - Jobs
+      parameters:
+        - in: query
+          name: customer_id
+          description: Filter to jobs for one customer.
+          schema:
+            type: string
+        - in: query
+          name: state
+          description: Filter by lifecycle state. Default returns only active.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - active
+                - deleted
+          example: 'active,deleted'
+        - in: query
+          name: 'date[gt]'
+          description: Return results where the date field is strictly greater than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-07-01T00:00:00+00:00'
+        - in: query
+          name: 'date[gte]'
+          description: Return results where the date field is greater than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: 'date[lt]'
+          description: Return results where the date field is strictly less than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-07-31T23:59:59+00:00'
+        - in: query
+          name: 'date[lte]'
+          description: Return results where the date field is less than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: keyword
+          description: Free-text match across job name and location.
+          schema:
+            type: string
+        - in: query
+          name: schedule_ids
+          description: Filter to jobs assigned to one or more schedules.
+          schema:
+            type: array
+            items:
+              type: string
+          example: '0nk8PGvAO,1bC2dEfG'
+        - in: query
+          name: include
+          description: |
+            Expand related objects. Without `include`, list rows only carry
+            the scalar `customer_id`. Every listed value adds a nested block.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+                - location
+                - schedules
+          example: 'customer,location,schedules'
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - date
+                - created
+          example: '-date'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+                  has_more:
+                    type: boolean
+        '401':
+          description: Unauthorized error
+        '403':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  message:
+                    type: string
+  '/jobs/{jobId}':
+    get:
+      summary: Retrieve a job
+      tags:
+        - Jobs
+      parameters:
+        - in: path
+          name: jobId
+          description: Job ID.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: Include related objects in the response.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+                - location
+                - schedules
+          example: 'customer,location,schedules'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Job'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          description: Not Found
+  '/jobs/{jobId}/activities':
+    get:
+      summary: List job activities
+      tags:
+        - Jobs
+      parameters:
+        - in: path
+          name: jobId
+          description: Job ID.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: 'date[gt]'
+          description: Return activities where the date is strictly greater than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-03-01T00:00:00+00:00'
+        - in: query
+          name: 'date[lt]'
+          description: Return activities where the date is strictly less than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-03-20T00:00:00+00:00'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JobActivity'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  '/jobs/{jobId}/devices':
+    get:
+      summary: List job devices
+      tags:
+        - Jobs
+      parameters:
+        - in: path
+          name: jobId
+          description: Job ID.
+          required: true
+          schema:
+            type: string
+            example: x1eW6yGmMA
+        - in: query
+          name: keyword
+          description: Search by device name.
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  '/jobs/{jobId}/materials':
+    get:
+      summary: List job materials
+      tags:
+        - Jobs
+      parameters:
+        - in: path
+          name: jobId
+          description: Job hash ID.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: keyword
+          description: Search by material name.
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Material'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /invoices:
+    get:
+      summary: List invoices
+      tags:
+        - Invoices
+      parameters:
+        - in: query
+          name: customer_id
+          description: Filter to invoices for one customer.
+          schema:
+            type: string
+        - in: query
+          name: job_id
+          description: Filter to invoices generated for one job.
+          schema:
+            type: string
+        - in: query
+          name: state
+          description: Filter by lifecycle state. Default returns only active.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - active
+                - deleted
+                - archived
+          example: 'active,archived'
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - draft
+                - sent
+                - paid
+                - partial
+                - partial_paid
+                - write_off
+                - failed
+                - void
+          example: 'draft,sent'
+        - in: query
+          name: sign_status
+          description: Filter by signature workflow status.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - draft
+                - emailed
+                - pending_sig
+                - signed
+          example: 'pending_sig,signed'
+        - in: query
+          name: 'date[gt]'
+          description: Return results where the date field is strictly greater than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-07-01T00:00:00+00:00'
+        - in: query
+          name: 'date[gte]'
+          description: Return results where the date field is greater than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: 'date[lt]'
+          description: Return results where the date field is strictly less than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-07-31T23:59:59+00:00'
+        - in: query
+          name: 'date[lte]'
+          description: Return results where the date field is less than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: keyword
+          description: Free-text search across the invoice number.
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: |
+            Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+                - location
+                - items
+          example: 'customer,location,items'
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - date
+                - created
+          example: '-date'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoice'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/invoices/{invoiceId}':
+    get:
+      summary: Retrieve an invoice
+      tags:
+        - Invoices
+      parameters:
+        - in: path
+          name: invoiceId
+          description: Invoice id.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: |
+            Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+                - location
+                - items
+          example: 'customer,location,items'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Invoice'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /recurring-invoices:
+    get:
+      operationId: listRecurringInvoices
+      summary: List recurring invoices
+      tags:
+        - Recurring Invoices
+      parameters:
+        - in: query
+          name: customer_id
+          description: Filter to recurring invoices for one customer.
+          schema:
+            type: string
+            minLength: 10
+          example: oae920rywE
+        - in: query
+          name: job_id
+          description: Filter to recurring invoices for one job.
+          schema:
+            type: string
+            minLength: 10
+          example: q2egQENWL9
+        - in: query
+          name: keyword
+          description: 'Free-text search across account number, customer name and invoice number.'
+          schema:
+            type: string
+            maxLength: 255
+          example: Smith
+        - in: query
+          name: 'created[gt]'
+          description: 'Return results where the recurrence start date is strictly greater than this value. Ignored when `created[gte]` is also sent.'
+          schema:
+            type: string
+            format: date-time
+          example: '2026-07-01T00:00:00+00:00'
+        - in: query
+          name: 'created[gte]'
+          description: Return results where the recurrence start date is greater than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: 'created[lt]'
+          description: 'Return results where the recurrence start date is strictly less than this value. Ignored when `created[lte]` is also sent.'
+          schema:
+            type: string
+            format: date-time
+          example: '2026-07-31T23:59:59+00:00'
+        - in: query
+          name: 'created[lte]'
+          description: Return results where the recurrence start date is less than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: include
+          description: |
+            Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+          example: customer
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order. `total` sorts on the billed amount, `job_name` on the job''s name. Default: the order returned by GorillaDesk.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - created
+                - '-created'
+                - total
+                - '-total'
+                - job_name
+                - '-job_name'
+          example: '-created'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RecurringInvoice'
+                  has_more:
+                    type: boolean
+                    example: false
+        '400':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+  '/recurring-invoices/{recurringInvoiceId}':
+    get:
+      operationId: getRecurringInvoice
+      summary: Retrieve a recurring invoice
+      tags:
+        - Recurring Invoices
+      parameters:
+        - in: path
+          name: recurringInvoiceId
+          description: Recurring invoice id.
+          required: true
+          schema:
+            type: string
+            minLength: 10
+          example: Rv7nQ4pW2k
+        - in: query
+          name: include
+          description: |
+            Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+          example: customer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RecurringInvoice'
+        '400':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /estimates:
+    get:
+      summary: List estimates
+      tags:
+        - Estimates
+      parameters:
+        - in: query
+          name: customer_id
+          description: Filter to estimates for one customer.
+          schema:
+            type: string
+        - in: query
+          name: job_id
+          description: Filter to estimates tied to one job.
+          schema:
+            type: string
+        - in: query
+          name: state
+          description: Filter by lifecycle state. Default returns only active.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - active
+                - deleted
+                - archived
+          example: 'active,archived'
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - draft
+                - pending
+                - won
+                - lost
+          example: 'won,pending'
+        - in: query
+          name: sign_status
+          description: Filter by signature workflow status.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - draft
+                - emailed
+                - pending_sig
+                - signed
+          example: 'pending_sig,signed'
+        - in: query
+          name: 'date[gt]'
+          description: Return results where the date field is strictly greater than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2025-09-01T00:00:00+00:00'
+        - in: query
+          name: 'date[gte]'
+          description: Return results where the date field is greater than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: 'date[lt]'
+          description: Return results where the date field is strictly less than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2025-09-30T23:59:59+00:00'
+        - in: query
+          name: 'date[lte]'
+          description: Return results where the date field is less than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: keyword
+          description: Free-text search across the estimate number.
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: |
+            Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+                - location
+                - items
+          example: 'customer,location,items'
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - date
+                - created
+          example: '-date'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Estimate'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/estimates/{estimateId}':
+    get:
+      summary: Retrieve an estimate
+      tags:
+        - Estimates
+      parameters:
+        - in: path
+          name: estimateId
+          description: Estimate id.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: |
+            Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+                - location
+                - items
+          example: 'customer,location,items'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Estimate'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /payments:
+    get:
+      summary: List payments
+      tags:
+        - Payments
+      parameters:
+        - in: query
+          name: customer_id
+          description: Filter to payments for one customer.
+          schema:
+            type: string
+        - in: query
+          name: invoice_id
+          description: Filter to payments for one invoice.
+          schema:
+            type: string
+        - in: query
+          name: status
+          description: Payment processor status.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - failed
+                - pending
+                - paid
+          example: 'paid,pending'
+        - in: query
+          name: 'date[gt]'
+          description: Return results where the date field is strictly greater than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-03-01T00:00:00+00:00'
+        - in: query
+          name: 'date[gte]'
+          description: Return results where the date field is greater than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: 'date[lt]'
+          description: Return results where the date field is strictly less than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-03-31T23:59:59+00:00'
+        - in: query
+          name: 'date[lte]'
+          description: Return results where the date field is less than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: include
+          description: Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+                - invoice
+          example: 'customer,invoice'
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - date
+                - created
+          example: '-date'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/payments/{paymentId}':
+    get:
+      summary: Retrieve a payment
+      tags:
+        - Payments
+      parameters:
+        - in: path
+          name: paymentId
+          description: Payment id.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: |
+            Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+          example: customer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Payment'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /credits:
+    get:
+      summary: List customer credits
+      tags:
+        - Credits
+      parameters:
+        - in: query
+          name: customer_id
+          description: Filter to the credit for one customer. Returns at most 1 row.
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Credit'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/credits/{creditId}':
+    get:
+      summary: Retrieve a customer credit
+      tags:
+        - Credits
+      parameters:
+        - in: path
+          name: creditId
+          description: Credit id.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Credit'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /documents:
+    get:
+      summary: List documents
+      tags:
+        - Documents
+      parameters:
+        - in: query
+          name: customer_id
+          description: Filter to documents for one customer.
+          schema:
+            type: string
+        - in: query
+          name: state
+          description: Filter by lifecycle state. Default returns only active.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - active
+                - deleted
+          example: 'active,deleted'
+        - in: query
+          name: job_id
+          description: Filter to documents for one job.
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - draft
+                - emailed
+                - pending_sig
+                - signed
+                - mailed
+          example: 'signed,emailed'
+        - in: query
+          name: 'created[gt]'
+          description: Return results where the document creation timestamp is strictly greater than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2025-09-01T00:00:00+00:00'
+        - in: query
+          name: 'created[gte]'
+          description: Return results where the document creation timestamp is greater than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: 'created[lt]'
+          description: Return results where the document creation timestamp is strictly less than this value.
+          schema:
+            type: string
+            format: date-time
+          example: '2025-09-30T23:59:59+00:00'
+        - in: query
+          name: 'created[lte]'
+          description: Return results where the document creation timestamp is less than or equal to this value.
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: keyword
+          description: Free-text search across the document name.
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: Expand related objects. Default returns scalar fields only.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+          example: customer
+        - in: query
+          name: sort
+          description: 'Prefix -[field] for descending order.'
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - date
+                - created
+          example: '-date'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Document'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/documents/{documentId}':
+    get:
+      summary: Retrieve a document
+      tags:
+        - Documents
+      parameters:
+        - in: path
+          name: documentId
+          description: Document id.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: include
+          description: Expand related objects.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - customer
+          example: customer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Document'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+  /payment-methods:
+    get:
+      summary: List payment methods
+      tags:
+        - Payment Methods
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PaymentMethod'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+  '/payment-methods/{paymentMethodId}':
+    get:
+      summary: Retrieve a payment method
+      tags:
+        - Payment Methods
+      parameters:
+        - in: path
+          name: paymentMethodId
+          description: Payment method hash id.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PaymentMethod'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'

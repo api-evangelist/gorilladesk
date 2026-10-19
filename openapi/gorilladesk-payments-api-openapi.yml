@@ -1,0 +1,504 @@
+openapi: 3.2.0
+info:
+  title: GorillaDesk Payments API
+  version: 1.0.0
+  description: '# Introduction
+
+    The GorillaDesk API is organized around REST.
+
+
+    Our API has predictable resource-oriented URLs, accepts JSON-encoded and form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs..
+
+
+    # Authentication
+
+
+    The GorillaDesk API uses Token authentication. API keys are per-company and can be generated and deleted in the Addons page.
+
+
+    # Rate Limits
+
+
+    We enforce API call rate limits to protect our infrastructure from excessive request rates, to keep GorillaDesk fast and stable for everyone. These limits are high enough that typical API workflows aren''t affected. However, please do code your integration to follow the rule below:
+
+
+    **If you receive a response status code of 429 (Too Many Requests), please sleep/pause for the number of seconds specified by the rate_reset value before making additional requests to that endpoint.**
+
+
+    Rate limits are enforced per endpoint group. Endpoint groups are used to provide more granular control by grouping endpoint URL paths and methods (e.g. GET, PUT, etc.) together. For instance, GETs to /v1/users/ and POSTs/PUTs to /v1/customers/ may be counted as two different API groups. This allows us to offer a higher limit on lightweight requests than we would be able to on more resource intensive request types.
+
+
+    API responses will have the following headers to provide rate limiting statistics about the limit it''s closest to hitting.
+
+
+    - `x-rate-limit-limit`: Request limit enforced for this endpoint, some endpoints may allow bursting over this limit
+
+    - `x-rate-limit-remaining`: Requests left in the enforcement window
+
+    - `x-rate-limit-reset`: Seconds remaining before this enforcement window ends (as a decimal).
+
+
+    # Model Context Protocol (MCP)
+
+
+    You can connect AI agents and tools to GorillaDesk via the Model Context Protocol. See the GorillaDesk MCP documentation.'
+  x-logo:
+    url: https://cdn.gorilladesk.com/assets/images/gorilladesk.png
+    altText: GorillaDesk logo
+servers:
+- url: https://api.gorilladesk.com/v1
+security:
+- Bearer: []
+tags:
+- name: Payments
+paths:
+  /payments:
+    get:
+      summary: List payments
+      tags:
+      - Payments
+      parameters:
+      - in: query
+        name: customer_id
+        description: Filter to payments for one customer.
+        schema:
+          type: string
+      - in: query
+        name: invoice_id
+        description: Filter to payments for one invoice.
+        schema:
+          type: string
+      - in: query
+        name: status
+        description: Payment processor status.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - failed
+            - pending
+            - paid
+        example: paid,pending
+      - in: query
+        name: date[gt]
+        description: Return results where the date field is strictly greater than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-03-01T00:00:00+00:00'
+      - in: query
+        name: date[gte]
+        description: Return results where the date field is greater than or equal to this value.
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: date[lt]
+        description: Return results where the date field is strictly less than this value.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-03-31T23:59:59+00:00'
+      - in: query
+        name: date[lte]
+        description: Return results where the date field is less than or equal to this value.
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: include
+        description: Expand related objects.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - customer
+            - invoice
+        example: customer,invoice
+      - in: query
+        name: sort
+        description: Prefix -[field] for descending order.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - date
+            - created
+        example: -date
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+                  has_more:
+                    type: boolean
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+      operationId: getPayments
+      x-operation-id-source: derived
+  /payments/{paymentId}:
+    get:
+      summary: Retrieve a payment
+      tags:
+      - Payments
+      parameters:
+      - in: path
+        name: paymentId
+        description: Payment id.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: include
+        description: 'Expand related objects.
+
+          '
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - customer
+        example: customer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Payment'
+        '401':
+          $ref: '#/paths/~1jobs/get/responses/401'
+        '403':
+          $ref: '#/paths/~1jobs/get/responses/403'
+        '404':
+          $ref: '#/paths/~1jobs~1%7BjobId%7D/get/responses/404'
+      operationId: getPaymentsByPaymentId
+      x-operation-id-source: derived
+components:
+  schemas:
+    CustomerPhone:
+      type: object
+      required:
+      - phone
+      - type
+      properties:
+        id:
+          type: string
+          description: Phone Id
+          example: 0nk8PGvAO
+        phone:
+          type: string
+          example: 212-456-7890
+          description: Phone number
+        type:
+          type: string
+          description: Phone type Id
+          example: 0nk8PGvAO
+    Payment:
+      type: object
+      description: A payment applied to an invoice.
+      properties:
+        id:
+          type: string
+          description: Payment ID.
+          example: Pm2k8L
+        date:
+          type: string
+          format: date-time
+          description: Payment date in ISO 8601.
+          example: '2026-03-19T00:00:00+00:00'
+        updated:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Last-updated timestamp of the payment in ISO 8601.
+          example: '2026-03-19T00:00:00+00:00'
+        status:
+          type: string
+          enum:
+          - failed
+          - pending
+          - paid
+          description: Status reported by the payment processor.
+          example: paid
+        gross_amount:
+          type: number
+          format: float
+          description: Total amount the customer was charged (amount + surcharge).
+          example: 59.98
+        applied_amount:
+          type: number
+          format: float
+          description: Amount that reduced the invoice balance.
+          example: 58
+        fee:
+          type: number
+          format: float
+          description: Processing fee deducted by the payment processor.
+          example: 2.04
+        surcharge:
+          type: number
+          format: float
+          description: Surcharge paid by the customer.
+          example: 1.98
+        payment_for:
+          type: string
+          enum:
+          - invoice
+          - credit
+          description: Indicates whether the payment is tied to an invoice or is a standalone credit.
+        method:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Stripe **** 1111
+            check_number:
+              type:
+              - string
+              - 'null'
+              example: '1042'
+            check_value:
+              type:
+              - number
+              - 'null'
+              format: float
+              description: Value of the check.
+              example: 58
+            memo:
+              type:
+              - string
+              - 'null'
+              description: Payment memo or note.
+              example: 'Payment for invoice #1234'
+        invoice:
+          $ref: '#/components/schemas/BaseInvoice'
+        customer:
+          $ref: '#/components/schemas/Customer/allOf/0'
+    Customer:
+      allOf:
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The customer ID.
+            example: 0nk8PGvAO
+          account_number:
+            type: string
+            description: Numeric account identifier for the customer.
+            example: '5047'
+          last_name:
+            type: string
+            example: Doe
+          first_name:
+            type: string
+            example: John
+          profile_url:
+            type: string
+            example: https://v3.gorilladesk.com/customers/5393
+          email:
+            type: string
+            example: example@gmail.com
+          phones:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/CustomerPhone'
+          company:
+            type: string
+            example: NL software
+          source:
+            type:
+            - object
+            - 'null'
+            description: Where the customer originated. Null if no source is assigned.
+            properties:
+              id:
+                type: string
+                description: Source ID.
+                example: aWGl2VlY78
+              name:
+                type: string
+                example: Facebook
+          tags:
+            type: array
+            description: Customer-level tag labels attached to this customer.
+            items:
+              type: string
+            example:
+            - super
+            - vip
+          state:
+            type: string
+            enum:
+            - active
+            - deleted
+            example: active
+          status:
+            type: string
+            enum:
+            - active
+            - inactive
+            - lead
+            example: active
+          created:
+            type: string
+            format: date-time
+            example: '2023-05-21T17:32:28+00:00'
+            description: Created date in ISO 8601.
+          updated:
+            type: string
+            format: date-time
+            description: Updated date in ISO 8601.
+            example: '2023-05-21T17:32:28+00:00'
+      - type: object
+        properties:
+          locations:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/Location'
+          contacts:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/Contact'
+    BaseInvoice:
+      type: object
+      description: Scalar invoice fields that are always returned.
+      properties:
+        id:
+          type: string
+          description: Invoice ID.
+          example: Wj2k8L
+        number:
+          type: string
+          description: Human-readable invoice number.
+          example: '5308'
+        status:
+          type: string
+          enum:
+          - draft
+          - sent
+          - paid
+          - partial
+          - paid_partially
+          - write_off
+          - failed
+          - void
+          description: Payment workflow status.
+          example: draft
+        sign_status:
+          type: string
+          enum:
+          - draft
+          - emailed
+          - pending_sig
+          - signed
+          description: Customer-signature workflow status.
+          example: draft
+        date:
+          type: string
+          format: date-time
+          description: Invoice date in ISO 8601.
+          example: '2026-07-22T00:00:00+00:00'
+        total:
+          type: number
+          format: float
+          description: Grand total (including tax).
+          example: 38.5
+        subtotal:
+          type: number
+          format: float
+          description: Line-item subtotal before invoice-level adjustments.
+          example: 35
+        amount_without_tax:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: Total before tax.
+          example: 35
+        tax_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: Total tax charged. Derived as `total - amount_without_tax`.
+          example: 3.5
+        amount_paid:
+          type: number
+          format: float
+          description: Sum of payments applied to the invoice.
+          example: 0
+        amount_due:
+          type: number
+          format: float
+          description: Outstanding balance.
+          example: 38.5
+        recurrence_summary:
+          type:
+          - string
+          - 'null'
+          description: Human-readable recurrence summary.
+          example: Monthly on the 6th, until 07/09/2026. Except January, April, September
+        created:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Created date of the invoice in ISO 8601.
+          example: '2026-07-22T00:00:00+00:00'
+        updated:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Last-updated timestamp of the invoice in ISO 8601.
+          example: '2026-07-22T00:00:00+00:00'
+        state:
+          type: string
+          enum:
+          - active
+          - deleted
+          - archived
+          description: Lifecycle state of the invoice.
+          example: active
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+x-sidebar-links:
+- label: Model Context Protocol (MCP)
+  url: https://api.gorilladesk.com/mcp/v1/docs
+  target: _blank
