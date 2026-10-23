@@ -304,3 +304,9 @@ x-sidebar-links:
 - label: Model Context Protocol (MCP)
   url: https://api.gorilladesk.com/mcp/v1/docs
   target: _blank
+x-provenance:
+  method: harvested
+  publisher: GorillaDesk
+  source: https://api.gorilladesk.com/v1/specs
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
